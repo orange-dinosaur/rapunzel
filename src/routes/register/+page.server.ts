@@ -1,16 +1,24 @@
-import { SESSION_COOKIE, createAdminClient } from '$lib/server/appwrite.js';
-import { fail, redirect } from '@sveltejs/kit';
-import { AppwriteException, ID, type Models } from 'node-appwrite';
+import { PUBLIC_EMAIL_VERIFICATION_PATH } from '$env/static/public';
+import {
+	SESSION_COOKIE,
+	createAdminClient,
+	createSessionClientCookies
+} from '$lib/server/appwrite.js';
+import { fail, redirect, type Cookies } from '@sveltejs/kit';
+import { AppwriteException, ID } from 'node-appwrite';
 
 export async function load({ locals }) {
-	if (locals.user) {
-		// If the user is logged in, redirect to its home page.
+	if (locals.user && locals.user.emailVerification) {
+		// If the user is logged in and is email is verified, redirect to its home page.
 		redirect(301, `/users/${locals.user.$id}`);
 	}
 }
 
 export const actions = {
 	// Action to create a new user account and session
+	// A user can successully login only if the email is verified
+	// Even if the email is not verified the session is still created,
+	// so that after the user verifies the email, they can be redirected to their account page
 	default: async ({ request, cookies }) => {
 		// Extract the form data.
 		const formData = await request.formData();
@@ -21,25 +29,21 @@ export const actions = {
 		// Create the Appwrite client.
 		const { account } = createAdminClient();
 
-		let userAccount: Models.User<Models.Preferences>;
 		let session;
 		try {
 			// Create the session using the client
-			userAccount = await account.create(ID.unique(), email, password, username);
+			await account.create(ID.unique(), email, password, username);
 			session = await account.createEmailPasswordSession(email, password);
 		} catch (error) {
 			const { code, message } = error as AppwriteException;
 
 			return fail(code ?? 500, {
 				status: code,
+				message,
 				fields: {
-					email: email,
-					username: username,
-					password: password
-				},
-				body: {
-					message: message,
-					session: null
+					email,
+					username,
+					password
 				}
 			});
 		}
@@ -52,7 +56,23 @@ export const actions = {
 			path: '/'
 		});
 
-		// Redirect to the account page.
-		redirect(301, `/users/${userAccount.$id}`);
+		await createVerification(cookies);
+
+		return {
+			status: 200,
+			message: 'User account created successfully',
+			fields: {
+				email: '',
+				username: '',
+				password: ''
+			}
+		};
 	}
 };
+
+async function createVerification(cookies: Cookies) {
+	// Create the Appwrite client.
+	const { account } = createSessionClientCookies(cookies);
+
+	await account.createVerification(PUBLIC_EMAIL_VERIFICATION_PATH);
+}

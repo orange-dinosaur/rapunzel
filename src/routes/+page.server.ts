@@ -7,8 +7,8 @@ export async function load({ locals }) {
         redirect(301, '/register');
     } */
 
-	if (locals.user) {
-		// If the user is logged in, redirect to its home page.
+	if (locals.user && locals.user.emailVerification) {
+		// If the user is logged in and is email is verified, redirect to its home page.
 		redirect(301, `/users/${locals.user.$id}`);
 	}
 }

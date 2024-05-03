@@ -1,16 +1,23 @@
-import { SESSION_COOKIE, createAdminClient } from '$lib/server/appwrite.js';
-import { fail, redirect } from '@sveltejs/kit';
+import {
+	SESSION_COOKIE,
+	createAdminClient,
+	createSessionClientCookies
+} from '$lib/server/appwrite.js';
+import { fail, redirect, type Cookies } from '@sveltejs/kit';
 import { AppwriteException } from 'node-appwrite';
 
 export async function load({ locals }) {
-	if (locals.user) {
-		// If the user is logged in, redirect to its home page.
+	if (locals.user && locals.user.emailVerification) {
+		// If the user is logged in and is email is verified, redirect to its home page.
 		redirect(301, `/users/${locals.user.$id}`);
 	}
 }
 
 export const actions = {
 	// Action to create a new user account and session
+	// A user can successully login only if the email is verified
+	// Even if the email is not verified the session is still created,
+	// so that after the user verifies the email, they can be redirected to their account page
 	default: async ({ request, cookies }) => {
 		// Extract the form data.
 		const formData = await request.formData();
@@ -28,18 +35,13 @@ export const actions = {
 
 			return fail(code ?? 500, {
 				status: code,
+				message,
 				fields: {
-					email: email,
-					password: password
-				},
-				body: {
-					message: message,
-					session: null
+					email,
+					password
 				}
 			});
 		}
-
-		console.log('SESSION: ', session);
 
 		// Set the session cookie with the secret
 		cookies.set(SESSION_COOKIE, session.secret, {
@@ -49,7 +51,35 @@ export const actions = {
 			path: '/'
 		});
 
+		// check if the user is verified
+		const userIsVerified = await checkVerification(cookies);
+
+		if (!userIsVerified) {
+			return fail(401, {
+				status: 401,
+				message: 'User is not verified. Please verify your email address.',
+				fields: {
+					email,
+					password
+				}
+			});
+		}
+
 		// Redirect to the account page.
 		redirect(301, `/users/${session.userId}`);
 	}
 };
+
+async function checkVerification(cookies: Cookies) {
+	// Create the Appwrite client.
+	const { account } = createSessionClientCookies(cookies);
+
+	let userAccount;
+	try {
+		userAccount = await account.get();
+	} catch (error) {
+		return false;
+	}
+
+	return userAccount.emailVerification;
+}

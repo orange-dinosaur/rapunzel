@@ -1,14 +1,16 @@
 <script lang="ts">
+	import { LoaderCircle, CircleAlert, CircleCheck } from 'lucide-svelte';
 	import { Button } from '$lib/components/ui/button/index.js';
-	import { LoaderCircle } from 'lucide-svelte';
 	import { Input } from '$lib/components/ui/input';
 	import { Label } from '$lib/components/ui/label';
 	import { applyAction, enhance } from '$app/forms';
+	import * as Alert from '$lib/components/ui/alert/index.js';
 	import { PUBLIC_REGISTER_IMAGE } from '$env/static/public';
 
 	export let form;
 
 	let isLoading = false;
+	let isAwaitingAuthentication = false;
 </script>
 
 <div
@@ -40,11 +42,9 @@
 					return async ({ result, update }) => {
 						isLoading = false;
 
-						console.log(result);
-
 						if (result.status === 200) {
+							isAwaitingAuthentication = true;
 							update();
-							window.location.href = '/users/giulio';
 						} else {
 							await applyAction(result);
 						}
@@ -103,11 +103,6 @@
 						{/if}
 						Register
 					</Button>
-					<div class="grid gap-1">
-						{#if form?.status != 200}
-							<p class="text-red-500 font-medium">{form?.body.message}</p>
-						{/if}
-					</div>
 				</div>
 			</form>
 
@@ -122,6 +117,23 @@
 				</a>
 				.
 			</p>
+
+			{#if form && form?.status != 200}
+				<Alert.Root variant="destructive">
+					<CircleAlert class="mr-2 h-4 w-4" />
+					<Alert.Title>Error</Alert.Title>
+					<Alert.Description>{form?.message}</Alert.Description>
+				</Alert.Root>
+			{:else if isAwaitingAuthentication}
+				<Alert.Root class="border-green-700">
+					<CircleCheck class="mr-2 h-4 w-4" color="#15803D" />
+					<Alert.Title class="text-green-700">Success</Alert.Title>
+					<Alert.Description class="text-green-700"
+						>Your profile has been successfully created, check your email to authtenticate before
+						loggin in</Alert.Description
+					>
+				</Alert.Root>
+			{/if}
 		</div>
 	</div>
 </div>

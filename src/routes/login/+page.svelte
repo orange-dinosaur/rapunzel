@@ -1,9 +1,10 @@
 <script lang="ts">
+	import { LoaderCircle, CircleAlert } from 'lucide-svelte';
 	import { Button } from '$lib/components/ui/button/index.js';
-	import { LoaderCircle } from 'lucide-svelte';
 	import { Input } from '$lib/components/ui/input';
 	import { Label } from '$lib/components/ui/label';
 	import { applyAction, enhance } from '$app/forms';
+	import * as Alert from '$lib/components/ui/alert/index.js';
 	import { PUBLIC_LOGIN_IMAGE } from '$env/static/public';
 
 	export let form;
@@ -40,11 +41,8 @@
 					return async ({ result, update }) => {
 						isLoading = false;
 
-						console.log(result);
-
 						if (result.status === 200) {
 							update();
-							window.location.href = '/users/giulio';
 						} else {
 							await applyAction(result);
 						}
@@ -88,11 +86,6 @@
 						{/if}
 						Login
 					</Button>
-					<div class="grid gap-1">
-						{#if form?.status != 200}
-							<p class="text-red-500 font-medium">{form?.body.message}</p>
-						{/if}
-					</div>
 				</div>
 			</form>
 
@@ -107,6 +100,14 @@
 				</a>
 				.
 			</p>
+
+			{#if form && form?.status != 200}
+				<Alert.Root variant="destructive">
+					<CircleAlert class="mr-2 h-4 w-4" />
+					<Alert.Title>Error</Alert.Title>
+					<Alert.Description>{form?.message}</Alert.Description>
+				</Alert.Root>
+			{/if}
 		</div>
 	</div>
 </div>
