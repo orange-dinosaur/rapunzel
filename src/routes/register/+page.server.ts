@@ -34,6 +34,22 @@ export const actions = {
 			// Create the session using the client
 			await account.create(ID.unique(), email, password, username);
 			session = await account.createEmailPasswordSession(email, password);
+
+			// Set the session cookie with the secret
+			cookies.set(SESSION_COOKIE, session.secret, {
+				sameSite: 'strict',
+				expires: new Date(session.expire),
+				secure: true,
+				path: '/'
+			});
+
+			await updateSinglePreference(
+				cookies,
+				'avatar',
+				`https://source.boringavatars.com/marble/120/${username}`
+			);
+
+			await createVerification(cookies);
 		} catch (error) {
 			const { code, message } = error as AppwriteException;
 
@@ -48,16 +64,6 @@ export const actions = {
 			});
 		}
 
-		// Set the session cookie with the secret
-		cookies.set(SESSION_COOKIE, session.secret, {
-			sameSite: 'strict',
-			expires: new Date(session.expire),
-			secure: true,
-			path: '/'
-		});
-
-		await createVerification(cookies);
-
 		return {
 			status: 200,
 			message: 'User account created successfully',
@@ -69,6 +75,14 @@ export const actions = {
 		};
 	}
 };
+
+// TODO
+async function updateSinglePreference(cookies: Cookies, key: string, value: string) {
+	// Create the Appwrite client.
+	const { account } = createSessionClientCookies(cookies);
+
+	await account.updatePrefs({ [key]: value });
+}
 
 async function createVerification(cookies: Cookies) {
 	// Create the Appwrite client.
