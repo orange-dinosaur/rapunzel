@@ -6,108 +6,109 @@
 	import { applyAction, enhance } from '$app/forms';
 	import * as Alert from '$lib/components/ui/alert/index.js';
 	import { PUBLIC_LOGIN_IMAGE } from '$env/static/public';
+	import logo from '$lib/assets/logo.jpg';
 
 	export let form;
 
 	let isLoading = false;
 </script>
 
-<div
-	class="container relative hidden h-screen flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0"
->
-	<Button href="/register" variant="ghost" class="absolute right-4 top-4 md:right-8 md:top-8">
-		Register
-	</Button>
+<div class="h-dvh w-dvw px-36 py-12">
+	<div class="h-full w-full flex items-center justify-center rounded-[50px] shadow-2xl">
+		<div class="h-full w-1/2 rounded-l-[50px] flex items-center justify-center overflow-hidden">
+			<img src={PUBLIC_LOGIN_IMAGE} alt="login" class="h-auto w-full rounded-l-[50px] bg-cover" />
+		</div>
 
-	<div class="relative hidden h-full flex-col bg-muted p-10 text-white dark:border-r lg:flex">
-		<div
-			class="absolute inset-0 bg-cover"
-			style="
-				background-image:
-					url({PUBLIC_LOGIN_IMAGE});"
-		></div>
-	</div>
-
-	<div class="lg:p-8">
-		<div class="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
-			<div class="flex flex-col space-y-2 text-center">
-				<h1 class="text-2xl font-semibold tracking-tight">Sign in to your account</h1>
+		<div class="h-full w-1/2 rounded-r-[50px] bg-fixed flex flex-col items-center justify-start">
+			<div class="w-full px-14 flex items-center justify-end my-12">
+				<Button href="/register" variant="ghost" class="mr-2 font-semibold">Register</Button>
 			</div>
 
-			<form
-				method="post"
-				use:enhance={() => {
-					isLoading = true;
-					return async ({ result, update }) => {
-						isLoading = false;
+			<div class="w-full px-14 flex items-center justify-center mb-12">
+				<a href="/"><img src={logo} alt="logo" class="h-[100px] w-auto" /></a>
+			</div>
 
-						if (result.status === 200) {
-							update();
-						} else {
-							await applyAction(result);
-						}
+			<div class="h-1/2 w-full px-14 flex flex-col items-center justify-between">
+				<div class="w-full flex flex-col items-center justify-start">
+					<form
+						method="post"
+						use:enhance={() => {
+							isLoading = true;
+							return async ({ result, update }) => {
+								isLoading = false;
 
-						update();
-					};
-				}}
-			>
-				<div class="grid gap-2">
-					<div class="grid gap-1">
-						<Label class="sr-only" for="email">Email</Label>
-						<Input
-							id="email"
-							name="email"
-							type="email"
-							value={form?.fields.email ?? ''}
-							placeholder="name@example.com"
-							autocapitalize="none"
-							autocomplete="email"
-							autocorrect="off"
-							disabled={isLoading}
-						/>
-					</div>
-					<div class="grid gap-1">
-						<Label class="sr-only" for="password">Pasword</Label>
-						<Input
-							id="password"
-							name="password"
-							type="password"
-							value={form?.fields.password ?? ''}
-							placeholder="*************"
-							autocapitalize="none"
-							autocomplete="password"
-							autocorrect="off"
-							disabled={isLoading}
-						/>
-					</div>
-					<Button type="submit" disabled={isLoading} class="font-semibold">
-						{#if isLoading}
-							<LoaderCircle class="mr-2 h-4 w-4 animate-spin" />
-						{/if}
-						Login
-					</Button>
+								if (result.status === 200) {
+									update();
+								} else {
+									await applyAction(result);
+								}
+
+								update();
+							};
+						}}
+						class="w-3/5"
+					>
+						<div class="grid gap-2">
+							<div class="grid gap-1">
+								<Label class="sr-only" for="email">Email</Label>
+								<Input
+									id="email"
+									name="email"
+									type="email"
+									value={form?.fields.email ?? ''}
+									placeholder="name@example.com"
+									autocapitalize="none"
+									autocomplete="email"
+									autocorrect="off"
+									disabled={isLoading}
+									class="bg-transparent focus:border-b-2 focus:border-b-blue-500 outline-none"
+								/>
+							</div>
+							<div class="grid gap-1">
+								<Label class="sr-only" for="password">Pasword</Label>
+								<Input
+									id="password"
+									name="password"
+									type="password"
+									value={form?.fields.password ?? ''}
+									placeholder="*************"
+									autocapitalize="none"
+									autocomplete="password"
+									autocorrect="off"
+									disabled={isLoading}
+									class="bg-transparent focus:border-b-2 focus:border-blue-500 outline-none"
+								/>
+							</div>
+							<Button type="submit" disabled={isLoading} class="font-semibold">
+								{#if isLoading}
+									<LoaderCircle class="mr-2 h-4 w-4 animate-spin" />
+								{/if}
+								Login
+							</Button>
+						</div>
+					</form>
+
+					<p class="px-8 text-center text-sm text-muted-foreground mt-6 w-3/5">
+						By clicking continue, you agree to our
+						<a href="/terms" class="underline underline-offset-4 hover:text-primary">
+							Terms of Service
+						</a>
+						and
+						<a href="/privacy" class="underline underline-offset-4 hover:text-primary">
+							Privacy Policy
+						</a>
+						.
+					</p>
 				</div>
-			</form>
 
-			<p class="px-8 text-center text-sm text-muted-foreground">
-				By clicking continue, you agree to our
-				<a href="/terms" class="underline underline-offset-4 hover:text-primary">
-					Terms of Service
-				</a>
-				and
-				<a href="/privacy" class="underline underline-offset-4 hover:text-primary">
-					Privacy Policy
-				</a>
-				.
-			</p>
-
-			{#if form && form?.status != 200}
-				<Alert.Root variant="destructive">
-					<CircleAlert class="mr-2 h-4 w-4" />
-					<Alert.Title>Error</Alert.Title>
-					<Alert.Description>{form?.message}</Alert.Description>
-				</Alert.Root>
-			{/if}
+				{#if form && form?.status != 200}
+					<Alert.Root variant="destructive" class="w-3/5">
+						<CircleAlert class="mr-2 h-4 w-4" />
+						<Alert.Title>Error</Alert.Title>
+						<Alert.Description>{form?.message}</Alert.Description>
+					</Alert.Root>
+				{/if}
+			</div>
 		</div>
 	</div>
 </div>
