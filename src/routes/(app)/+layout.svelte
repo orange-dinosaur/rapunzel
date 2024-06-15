@@ -15,7 +15,7 @@
 	}
 </script>
 
-<div class="bg-green-400 h-14 mb-4 flex items-center px-4">
+<div class="bg-primary h-14 mb-4 flex items-center px-4">
 	<h1 class="font-bold text-white">tyna</h1>
 	<div class="ml-auto flex items-center space-x-4">
 		<!-- Search -->

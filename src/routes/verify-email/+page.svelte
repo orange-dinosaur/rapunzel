@@ -1,7 +1,7 @@
 <script>
 	import { PUBLIC_VERIFY_EMAIL_IMAGE } from '$env/static/public';
 	import { Button } from '$lib/components/ui/button';
-	import logo from '$lib/assets/logo.jpg';
+	import logo from '$lib/assets/logo.png';
 
 	export let data;
 </script>

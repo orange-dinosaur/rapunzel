@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Button } from '$lib/components/ui/button/index.js';
 	import { PUBLIC_LANDING_IMAGE } from '$env/static/public';
-	import logo from '$lib/assets/logo.jpg';
+	import logo from '$lib/assets/logo.png';
 </script>
 
 <div class="h-dvh w-dvw px-36 py-12">

@@ -6,7 +6,7 @@
 	import { applyAction, enhance } from '$app/forms';
 	import * as Alert from '$lib/components/ui/alert/index.js';
 	import { PUBLIC_LOGIN_IMAGE } from '$env/static/public';
-	import logo from '$lib/assets/logo.jpg';
+	import logo from '$lib/assets/logo.png';
 
 	export let form;
 
@@ -61,7 +61,7 @@
 									autocomplete="email"
 									autocorrect="off"
 									disabled={isLoading}
-									class="bg-transparent focus:border-b-2 focus:border-b-blue-500 outline-none"
+									class="bg-transparent focus:border-b-2 focus:border-b-primary outline-none"
 								/>
 							</div>
 							<div class="grid gap-1">
@@ -76,7 +76,7 @@
 									autocomplete="password"
 									autocorrect="off"
 									disabled={isLoading}
-									class="bg-transparent focus:border-b-2 focus:border-blue-500 outline-none"
+									class="bg-transparent focus:border-b-2 focus:border-b-primary outline-none"
 								/>
 							</div>
 							<Button type="submit" disabled={isLoading} class="font-semibold">
