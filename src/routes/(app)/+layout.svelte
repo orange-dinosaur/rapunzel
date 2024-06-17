@@ -23,7 +23,7 @@
 </script>
 
 <div class="h-dvh w-dvw flex">
-	<div class="h-full flex flex-col items-center justify-start border-2 border-primary px-8">
+	<div class="h-full flex flex-col items-center justify-start px-8">
 		<!-- Logo -->
 		<a href={'/users/' + user?.$id}><img src={logo} alt="logo" class="h-11 w-auto mt-4" /></a>
 
@@ -72,8 +72,10 @@
 		</div>
 	</div>
 
+	<div class=" w-0 border-r-2 border-primary my-4"></div>
+
 	<div class="h-full w-full flex flex-col">
-		<div class="w-full flex items-center justify-between py-4 border-2 border-primary">
+		<div class="w-full flex items-center justify-between py-4">
 			<!-- App name -->
 			<div>
 				<h1 class="font-bold text-primary text-2xl ml-8">tyna</h1>
