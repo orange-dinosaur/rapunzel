@@ -7,6 +7,8 @@
 	import { Search, Home, Book, Bookmark, Star, Award } from 'lucide-svelte';
 	import { redirect } from '@sveltejs/kit';
 	import logo from '$lib/assets/logo.png';
+	import { goto } from '$app/navigation';
+	import { browser } from '$app/environment';
 
 	export let data;
 
@@ -19,6 +21,19 @@
 		avatarUrl =
 			user.prefs.avatar?.toString() ??
 			'https://source.boringavatars.com/marble/120/Maria%20Mitchell';
+	}
+
+	async function logout() {
+		const res = await fetch('/api/logout', {
+			method: 'POST'
+		});
+
+		if (res.ok) {
+			// Workaround: redirect to login page
+			const location = '/login';
+			if (browser) return await goto(location);
+			else throw redirect(307, location);
+		}
 	}
 </script>
 
@@ -136,7 +151,7 @@
 							</DropdownMenu.Item>
 						</DropdownMenu.Group>
 						<DropdownMenu.Separator />
-						<DropdownMenu.Item>
+						<DropdownMenu.Item on:click={logout}>
 							Log out
 							<DropdownMenu.Shortcut>⇧⌘Q</DropdownMenu.Shortcut>
 						</DropdownMenu.Item>
