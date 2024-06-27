@@ -153,6 +153,6 @@
 				</DropdownMenu.Root>
 			</div>
 		</div>
-		<div class="h-full ml-32 mt-32"><slot /></div>
+		<div class="h-full w-[calc(100%-8rem)] ml-32 mt-32"><slot /></div>
 	</div>
 </div>
