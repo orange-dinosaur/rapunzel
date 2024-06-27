@@ -71,6 +71,6 @@ export const actions = {
 		const formData = await request.formData();
 		const searchStr = formData.get('searchStr')?.toString() ?? '';
 
-		redirect(301, `/search?searchString=${searchStr}`);
+		redirect(307, `/search?searchString=${searchStr}`);
 	}
 };

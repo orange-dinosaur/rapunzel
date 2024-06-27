@@ -47,67 +47,75 @@
 
 <div class="flex">
 	<!-- Left Navigation -->
-	<div class="h-dvh fixed z-10 flex items-center justify-start">
-		<!-- Links -->
-		<div class="w-full flex flex-col items-start justify-center mx-8">
-			<Button
-				on:click={() => (searchString = '')}
-				href={'/users/' + user?.$id}
-				class="${$page.url.pathname === '/users/' + user?.$id
-					? 'h-12 min-h-12 w-12 p-0 m-0 mb-2 rounded-full'
-					: 'h-12 min-h-12 w-12 p-0 m-0 mb-2 rounded-full bg-background text-primary hover:text-background'}"
+	<div class="h-dvh fixed z-20 flex items-center justify-start">
+		<div class="h-full flex flex-col items-center justify-between mx-8 pt-8">
+			<!-- Logo -->
+			<a href={'/users/' + user?.$id} on:click={() => (searchString = '')}
+				><img src={logo} alt="logo" class="h-11 w-auto" /></a
 			>
-				<Home size={24} />
-			</Button>
-			<Button
-				on:click={() => (searchString = '')}
-				href={'/users/' + user?.$id + '/books'}
-				class="${$page.url.pathname === '/users/' + user?.$id + '/books'
-					? 'h-12 min-h-12 w-12 p-0 m-0 mb-2 rounded-full'
-					: 'h-12 min-h-12 w-12 p-0 m-0 mb-2 rounded-full bg-background text-primary hover:text-background'}"
-			>
-				<Book size={24} />
-			</Button>
-			<Button
-				on:click={() => (searchString = '')}
-				href={'/users/' + user?.$id + '/bookmarks'}
-				class="${$page.url.pathname === '/users/' + user?.$id + '/bookmarks'
-					? 'h-12 min-h-12 w-12 p-0 m-0 mb-2 rounded-full'
-					: 'h-12 min-h-12 w-12 p-0 m-0 mb-2 rounded-full bg-background text-primary hover:text-background'}"
-			>
-				<Bookmark size={24} />
-			</Button>
-			<Button
-				on:click={() => (searchString = '')}
-				href={'/users/' + user?.$id + '/favorites'}
-				class="${$page.url.pathname === '/users/' + user?.$id + '/favorites'
-					? 'h-12 min-h-12 w-12 p-0 m-0 mb-2 rounded-full'
-					: 'h-12 min-h-12 w-12 p-0 m-0 mb-2 rounded-full bg-background text-primary hover:text-background'}"
-			>
-				<Star size={24} />
-			</Button>
-			<Button
-				on:click={() => (searchString = '')}
-				href={'/users/' + user?.$id + '/awards'}
-				class="${$page.url.pathname === '/users/' + user?.$id + '/awards'
-					? 'h-12 min-h-12 w-12 p-0 m-0 mb-2 rounded-full'
-					: 'h-12 min-h-12 w-12 p-0 m-0 mb-2 rounded-full bg-background text-primary hover:text-background'}"
-			>
-				<Award size={24} />
-			</Button>
+
+			<!-- Links -->
+			<div class="h-full flex flex-col items-start justify-center">
+				<Button
+					on:click={() => (searchString = '')}
+					href={'/users/' + user?.$id}
+					class="${$page.url.pathname === '/users/' + user?.$id
+						? 'h-12 min-h-12 w-12 p-0 m-0 mb-2 rounded-full'
+						: 'h-12 min-h-12 w-12 p-0 m-0 mb-2 rounded-full bg-background text-primary hover:text-background'}"
+				>
+					<Home size={24} />
+				</Button>
+				<Button
+					on:click={() => (searchString = '')}
+					href={'/users/' + user?.$id + '/books'}
+					class="${$page.url.pathname === '/users/' + user?.$id + '/books'
+						? 'h-12 min-h-12 w-12 p-0 m-0 mb-2 rounded-full'
+						: 'h-12 min-h-12 w-12 p-0 m-0 mb-2 rounded-full bg-background text-primary hover:text-background'}"
+				>
+					<Book size={24} />
+				</Button>
+				<Button
+					on:click={() => (searchString = '')}
+					href={'/users/' + user?.$id + '/bookmarks'}
+					class="${$page.url.pathname === '/users/' + user?.$id + '/bookmarks'
+						? 'h-12 min-h-12 w-12 p-0 m-0 mb-2 rounded-full'
+						: 'h-12 min-h-12 w-12 p-0 m-0 mb-2 rounded-full bg-background text-primary hover:text-background'}"
+				>
+					<Bookmark size={24} />
+				</Button>
+				<Button
+					on:click={() => (searchString = '')}
+					href={'/users/' + user?.$id + '/favorites'}
+					class="${$page.url.pathname === '/users/' + user?.$id + '/favorites'
+						? 'h-12 min-h-12 w-12 p-0 m-0 mb-2 rounded-full'
+						: 'h-12 min-h-12 w-12 p-0 m-0 mb-2 rounded-full bg-background text-primary hover:text-background'}"
+				>
+					<Star size={24} />
+				</Button>
+				<Button
+					on:click={() => (searchString = '')}
+					href={'/users/' + user?.$id + '/awards'}
+					class="${$page.url.pathname === '/users/' + user?.$id + '/awards'
+						? 'h-12 min-h-12 w-12 p-0 m-0 mb-2 rounded-full'
+						: 'h-12 min-h-12 w-12 p-0 m-0 mb-2 rounded-full bg-background text-primary hover:text-background'}"
+				>
+					<Award size={24} />
+				</Button>
+			</div>
 		</div>
-		<div class="h-full border-r-2 border-primary mb-32"></div>
+
+		<div class="h-[calc(100%-4rem)] border-r-2 border-primary"></div>
 	</div>
 
 	<!-- Main content -->
 	<div class="w-full flex flex-col items-start justify-start">
 		<!-- Top Navigation -->
-		<div class="w-full fixed z-10 bg-background flex items-center justify-between py-8 px-8">
-			<!-- Logo -->
-			<!-- TODO: clear search string on logo click -->
-			<a href={'/users/' + user?.$id}><img src={logo} alt="logo" class="h-11 w-auto" /></a>
+		<div class="w-full fixed z-10 bg-background flex items-center justify-between pt-8">
+			<a href={'/users/' + user?.$id} on:click={() => (searchString = '')}
+				><p class="text-2xl font-bold text-primary pl-36">tyna</p></a
+			>
 
-			<div class="flex items-center justify-end">
+			<div class="flex items-center justify-end mr-8">
 				<!-- Search -->
 				{#if !$page.url.pathname.startsWith('/search')}
 					<form
@@ -131,11 +139,7 @@
 				<!-- Avatar dropdown menu -->
 				<DropdownMenu.Root>
 					<DropdownMenu.Trigger asChild let:builder>
-						<Button
-							variant="ghost"
-							builders={[builder]}
-							class="relative h-11 w-11 rounded-full mr-8"
-						>
+						<Button variant="ghost" builders={[builder]} class="relative h-11 w-11 rounded-full">
 							<Avatar.Root class="h-11 w-11">
 								<Avatar.Image src={avatarUrl} alt="user profile picture" />
 								<Avatar.Fallback>SC</Avatar.Fallback>
@@ -159,6 +163,6 @@
 				</DropdownMenu.Root>
 			</div>
 		</div>
-		<div class="h-full w-[calc(100%-8rem)] ml-32 mt-32"><slot /></div>
+		<div class="h-full w-[calc(100%-9rem)] ml-36 mt-32"><slot /></div>
 	</div>
 </div>
