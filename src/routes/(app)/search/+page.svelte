@@ -12,7 +12,8 @@
 </script>
 
 <div class="flex flex-col items-center justify-start pr-8">
-	<div class="bg-background fixed z-10">
+	<div class="w-full h-16 bg-background fixed z-10"></div>
+	<div class="bg-background fixed z-20">
 		<form
 			method="post"
 			use:enhance={() => {

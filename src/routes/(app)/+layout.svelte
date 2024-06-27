@@ -163,6 +163,7 @@
 				</DropdownMenu.Root>
 			</div>
 		</div>
+		<div class="w-full h-16 fixed bg-background mt-16"></div>
 		<div class="h-full w-[calc(100%-9rem)] ml-36 mt-32"><slot /></div>
 	</div>
 </div>
