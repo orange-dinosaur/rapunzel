@@ -51,6 +51,7 @@
 		<!-- Links -->
 		<div class="w-full flex flex-col items-start justify-center mx-8">
 			<Button
+				on:click={() => (searchString = '')}
 				href={'/users/' + user?.$id}
 				class="${$page.url.pathname === '/users/' + user?.$id
 					? 'h-12 min-h-12 w-12 p-0 m-0 mb-2 rounded-full'
@@ -59,6 +60,7 @@
 				<Home size={24} />
 			</Button>
 			<Button
+				on:click={() => (searchString = '')}
 				href={'/users/' + user?.$id + '/books'}
 				class="${$page.url.pathname === '/users/' + user?.$id + '/books'
 					? 'h-12 min-h-12 w-12 p-0 m-0 mb-2 rounded-full'
@@ -67,6 +69,7 @@
 				<Book size={24} />
 			</Button>
 			<Button
+				on:click={() => (searchString = '')}
 				href={'/users/' + user?.$id + '/bookmarks'}
 				class="${$page.url.pathname === '/users/' + user?.$id + '/bookmarks'
 					? 'h-12 min-h-12 w-12 p-0 m-0 mb-2 rounded-full'
@@ -75,6 +78,7 @@
 				<Bookmark size={24} />
 			</Button>
 			<Button
+				on:click={() => (searchString = '')}
 				href={'/users/' + user?.$id + '/favorites'}
 				class="${$page.url.pathname === '/users/' + user?.$id + '/favorites'
 					? 'h-12 min-h-12 w-12 p-0 m-0 mb-2 rounded-full'
@@ -83,6 +87,7 @@
 				<Star size={24} />
 			</Button>
 			<Button
+				on:click={() => (searchString = '')}
 				href={'/users/' + user?.$id + '/awards'}
 				class="${$page.url.pathname === '/users/' + user?.$id + '/awards'
 					? 'h-12 min-h-12 w-12 p-0 m-0 mb-2 rounded-full'
@@ -99,6 +104,7 @@
 		<!-- Top Navigation -->
 		<div class="w-full fixed z-10 bg-background flex items-center justify-between py-8 px-8">
 			<!-- Logo -->
+			<!-- TODO: clear search string on logo click -->
 			<a href={'/users/' + user?.$id}><img src={logo} alt="logo" class="h-11 w-auto" /></a>
 
 			<div class="flex items-center justify-end">
