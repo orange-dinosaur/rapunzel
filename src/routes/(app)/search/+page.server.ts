@@ -1,3 +1,4 @@
+//import { GOOGLE_BOOKS_API_KEY } from '$env/static/private';
 import { redirect } from '@sveltejs/kit';
 
 export async function load({ locals, url }) {
@@ -18,46 +19,119 @@ export async function load({ locals, url }) {
 
 	// search the books
 	interface Book {
+		id: string;
 		title: string;
-		author: string;
+		authors: string[];
+		publisher: string;
+		publishedDate: string;
 		description: string;
+		isbn10: string;
+		isbn13: string;
+		pageCount: number;
+		categories: string[];
+		language: string;
 		cover: string;
 	}
-	let books: Book[] = [];
+	const books: Book[] = [];
 	if (searchString != '') {
 		// search the books
-		books = [
-			{
-				title: 'Book Title 1',
-				author: 'Author Name 1',
-				description: 'Book Description 1',
-				cover:
-					'https://www.rebeccayarros.com/wp-content/uploads/2022/10/FourthWing-final-1600-1365x2048.jpg'
-			},
-			{
-				title: 'Book Title 2',
-				author: 'Author Name 2',
-				description: 'Book Description 2',
-				cover:
-					'https://images.lovelybooks.de/img/520x/cover.allsize.lovelybooks.de/9783455650877_1583288353000_xxl.jpg'
-			},
-			{
-				title: 'Book Title 3',
-				author: 'Author Name 3',
-				description: 'Book Description 3',
-				cover:
-					'https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1679005122i/123257687.jpg'
-			},
-			{
-				title: 'Book Title 4',
-				author: 'Author Name 4',
-				description: 'Book Description 4',
-				cover: 'https://img.ibs.it/images/9788834733790_0_0_0_75.jpg'
-			}
-		];
+		await fetch(`https://www.googleapis.com/books/v1/volumes?q=${searchString}&maxResults=40`)
+			.then((res) => {
+				return res.json();
+			})
+			.then((data) => {
+				const items = data.items;
+
+				// loop through the items
+				items.forEach((item: object) => {
+					const book: Book = {
+						id: '',
+						title: '',
+						authors: [],
+						publisher: '',
+						publishedDate: '',
+						description: '',
+						isbn10: '',
+						isbn13: '',
+						pageCount: 0,
+						categories: [],
+						language: '',
+						cover: 'https://i.pinimg.com/originals/a0/69/7a/a0697af2de64d67cf6dbb2a13dbc0457.png'
+					};
+
+					// check if properties are available
+					if ('id' in item) {
+						book.id = (item.id as string).toString();
+					}
+
+					if ('volumeInfo' in item) {
+						const volumeInfo = item.volumeInfo as object;
+
+						if ('title' in volumeInfo) {
+							book.title = (volumeInfo.title as string).toString();
+						}
+
+						if ('authors' in volumeInfo) {
+							book.authors = (volumeInfo.authors as string[]).map((author) => author.toString());
+						}
+
+						if ('publisher' in volumeInfo) {
+							book.publisher = (volumeInfo.publisher as string).toString();
+						}
+
+						if ('publishedDate' in volumeInfo) {
+							book.publishedDate = (volumeInfo.publishedDate as string).toString();
+						}
+
+						if ('description' in volumeInfo) {
+							book.description = (volumeInfo.description as string).toString();
+						}
+
+						// check if industryIdentifiers is available
+						if ('industryIdentifiers' in volumeInfo) {
+							const industryIdentifiers = volumeInfo.industryIdentifiers as object[];
+
+							industryIdentifiers.forEach((industryIdentifier) => {
+								if ('type' in industryIdentifier && 'identifier' in industryIdentifier) {
+									if (industryIdentifier.type == 'ISBN_10') {
+										book.isbn10 = industryIdentifier.identifier as string;
+									} else if (industryIdentifier.type == 'ISBN_13') {
+										book.isbn13 = industryIdentifier.identifier as string;
+									}
+								}
+							});
+						}
+
+						if ('pageCount' in volumeInfo) {
+							book.pageCount = volumeInfo.pageCount as number;
+						}
+
+						if ('categories' in volumeInfo) {
+							book.categories = (volumeInfo.categories as string[]).map((category) =>
+								category.toString()
+							);
+						}
+
+						if ('language' in volumeInfo) {
+							book.language = (volumeInfo.language as string).toString();
+						}
+
+						if ('imageLinks' in volumeInfo) {
+							const imageLinks = volumeInfo.imageLinks as object;
+
+							if ('thumbnail' in imageLinks) {
+								book.cover = (imageLinks.thumbnail as string).toString();
+							} else if ('smallThumbnail' in imageLinks) {
+								book.cover = (imageLinks.smallThumbnail as string).toString();
+							}
+						}
+					}
+
+					books.push(book);
+				});
+			});
 	}
 
-	// Pass the stored user local to the page.
 	return {
 		user: locals.user,
 		searchString,
