@@ -1,4 +1,5 @@
 //import { GOOGLE_BOOKS_API_KEY } from '$env/static/private';
+import { BookSearch } from '$lib/server/book/book.js';
 import { redirect } from '@sveltejs/kit';
 
 export async function load({ locals, url }) {
@@ -18,21 +19,7 @@ export async function load({ locals, url }) {
 	}
 
 	// search the books
-	interface Book {
-		id: string;
-		title: string;
-		authors: string[];
-		publisher: string;
-		publishedDate: string;
-		description: string;
-		isbn10: string;
-		isbn13: string;
-		pageCount: number;
-		categories: string[];
-		language: string;
-		cover: string;
-	}
-	const books: Book[] = [];
+	const books: BookSearch[] = [];
 	if (searchString != '') {
 		// search the books
 		await fetch(`https://www.googleapis.com/books/v1/volumes?q=${searchString}&maxResults=40`)
@@ -44,98 +31,20 @@ export async function load({ locals, url }) {
 
 				// loop through the items
 				items.forEach((item: object) => {
-					const book: Book = {
-						id: '',
-						title: '',
-						authors: [],
-						publisher: '',
-						publishedDate: '',
-						description: '',
-						isbn10: '',
-						isbn13: '',
-						pageCount: 0,
-						categories: [],
-						language: '',
-						cover: 'https://i.pinimg.com/originals/a0/69/7a/a0697af2de64d67cf6dbb2a13dbc0457.png'
-					};
-
-					// check if properties are available
-					if ('id' in item) {
-						book.id = (item.id as string).toString();
-					}
-
-					if ('volumeInfo' in item) {
-						const volumeInfo = item.volumeInfo as object;
-
-						if ('title' in volumeInfo) {
-							book.title = (volumeInfo.title as string).toString();
-						}
-
-						if ('authors' in volumeInfo) {
-							book.authors = (volumeInfo.authors as string[]).map((author) => author.toString());
-						}
-
-						if ('publisher' in volumeInfo) {
-							book.publisher = (volumeInfo.publisher as string).toString();
-						}
-
-						if ('publishedDate' in volumeInfo) {
-							book.publishedDate = (volumeInfo.publishedDate as string).toString();
-						}
-
-						if ('description' in volumeInfo) {
-							book.description = (volumeInfo.description as string).toString();
-						}
-
-						// check if industryIdentifiers is available
-						if ('industryIdentifiers' in volumeInfo) {
-							const industryIdentifiers = volumeInfo.industryIdentifiers as object[];
-
-							industryIdentifiers.forEach((industryIdentifier) => {
-								if ('type' in industryIdentifier && 'identifier' in industryIdentifier) {
-									if (industryIdentifier.type == 'ISBN_10') {
-										book.isbn10 = industryIdentifier.identifier as string;
-									} else if (industryIdentifier.type == 'ISBN_13') {
-										book.isbn13 = industryIdentifier.identifier as string;
-									}
-								}
-							});
-						}
-
-						if ('pageCount' in volumeInfo) {
-							book.pageCount = volumeInfo.pageCount as number;
-						}
-
-						if ('categories' in volumeInfo) {
-							book.categories = (volumeInfo.categories as string[]).map((category) =>
-								category.toString()
-							);
-						}
-
-						if ('language' in volumeInfo) {
-							book.language = (volumeInfo.language as string).toString();
-						}
-
-						if ('imageLinks' in volumeInfo) {
-							const imageLinks = volumeInfo.imageLinks as object;
-
-							if ('thumbnail' in imageLinks) {
-								book.cover = (imageLinks.thumbnail as string).toString();
-							} else if ('smallThumbnail' in imageLinks) {
-								book.cover = (imageLinks.smallThumbnail as string).toString();
-							}
-						}
-					}
+					const book = new BookSearch(item);
 
 					books.push(book);
 				});
 			});
 	}
 
+	// convert the books to plain objects so that they can be sent to the client and serialized
+	const plainObjectBooks = books.map((book) => book.toPlainObject());
+
 	return {
 		user: locals.user,
 		searchString,
-		books
+		books: plainObjectBooks
 	};
 }
 
