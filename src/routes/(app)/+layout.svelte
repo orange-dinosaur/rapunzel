@@ -4,7 +4,7 @@
 	import { Input } from '$lib/components/ui/input';
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
 	import * as Avatar from '$lib/components/ui/avatar';
-	import { Search, Home, Book, Bookmark, Star, Award } from 'lucide-svelte';
+	import { Search, Home, Book, Bookmark, Star, Award, LoaderCircle } from 'lucide-svelte';
 	import { redirect } from '@sveltejs/kit';
 	import logo from '$lib/assets/logo.png';
 	import { goto } from '$app/navigation';
@@ -13,6 +13,8 @@
 	export let data;
 
 	let searchString = '';
+
+	let isLoading = false;
 
 	// TODO: make sure that the user object is not null, so that we can access the pages without errors
 	const { user } = data;
@@ -41,6 +43,7 @@
 	 */
 	async function handleSearchSubmit(event) {
 		event.preventDefault(); // Prevent default form submission
+		isLoading = true; // Show loading spinner
 		await goto('/search?searchString=' + searchString); // Navigate to the target page
 	}
 </script>
@@ -131,7 +134,11 @@
 							class="mr-2 my-[2px] border-none font-semibold"
 						/>
 						<Button type="submit" class="h-9 min-h-9 w-9 min-w-9 p-0 m-0 rounded-full">
-							<Search size={16} />
+							{#if isLoading}
+								<LoaderCircle class="h-4 w-4 animate-spin" />
+							{:else}
+								<Search size={16} />
+							{/if}
 						</Button>
 					</form>
 				{/if}
