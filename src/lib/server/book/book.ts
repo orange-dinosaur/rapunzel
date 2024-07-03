@@ -113,7 +113,7 @@ export class BookSearch implements Book {
 			isbn13: this.isbn13,
 			pageCount: this.pageCount,
 			categories: this.categories,
-			anguage: this.language,
+			language: this.language,
 			cover: this.cover
 		};
 	}
