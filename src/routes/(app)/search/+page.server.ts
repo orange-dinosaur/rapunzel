@@ -1,5 +1,5 @@
 //import { GOOGLE_BOOKS_API_KEY } from '$env/static/private';
-import { BookSearch } from '$lib/server/book/book.js';
+import { BookSearch } from '$lib/types/book/book.js';
 import { redirect } from '@sveltejs/kit';
 
 export async function load({ locals, url }) {

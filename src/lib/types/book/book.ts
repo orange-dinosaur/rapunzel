@@ -1,5 +1,7 @@
 interface Book {
 	id: string;
+
+	toPlainObject(): object;
 }
 
 export class BookSearch implements Book {
@@ -115,6 +117,68 @@ export class BookSearch implements Book {
 			categories: this.categories,
 			language: this.language,
 			cover: this.cover
+		};
+	}
+}
+
+export class BookSaved implements Book {
+	id: string;
+	readingStatus: string;
+	bookType: string;
+	tags: string[];
+	rating: number;
+	notes: string;
+	libraryId: string;
+
+	constructor(obj?: object) {
+		this.id = '';
+		this.readingStatus = '';
+		this.bookType = '';
+		this.tags = [];
+		this.rating = 0;
+		this.notes = '';
+		this.libraryId = '';
+
+		if (obj != undefined) {
+			if ('id' in obj) {
+				this.id = (obj.id as string).toString();
+			}
+
+			if ('readingStatus' in obj) {
+				this.readingStatus = (obj.readingStatus as string).toString();
+			}
+
+			if ('bookType' in obj) {
+				this.bookType = (obj.bookType as string).toString();
+			}
+
+			if ('tags' in obj) {
+				this.tags = (obj.tags as string[]).map((tag) => tag.toString());
+			}
+
+			if ('rating' in obj) {
+				this.rating = obj.rating as number;
+			}
+
+			if ('notes' in obj) {
+				this.notes = (obj.notes as string).toString();
+			}
+
+			if ('libraryId' in obj) {
+				this.libraryId = (obj.libraryId as string).toString();
+			}
+		}
+	}
+
+	toPlainObject() {
+		return {
+			id: this.id,
+			readingStatus: this.readingStatus,
+			bookType: this.bookType,
+			tags: this.tags,
+			rating: this.rating,
+			notes: this.notes,
+			libraryId: this.libraryId
 		};
 	}
 }
