@@ -6,6 +6,7 @@
 	import * as Sheet from '$lib/components/ui/sheet';
 	import { BookSaved } from '$lib/types/book/book';
 	import StarRating from '../rating/StarRating.svelte';
+	import Tags from '../tags/Tags.svelte';
 
 	let { book }: { book: any } = $props();
 
@@ -135,7 +136,7 @@
 				</div>
 
 				<!-- Book Type -->
-				<div class="flex items-center mt-1">
+				<div class="flex items-center mt-1 mb-4">
 					<p class="text-sm text-muted-foreground font-semibold mr-2">Book type:</p>
 					<Select.Root
 						selected={bookType ? { label: bookType, value: bookType } : undefined}
@@ -155,69 +156,7 @@
 				</div>
 
 				<!-- Tags -->
-				<div class="flex items-center mt-3">
-					<div class="flex">
-						{#each tags as tag}
-							<Badge class="mr-2"
-								>{tag} |
-								<!-- svelte-ignore a11y_click_events_have_key_events -->
-								<!-- svelte-ignore a11y_no_static_element_interactions -->
-								<!-- svelte-ignore event_directive_deprecated -->
-								<div
-									class="mx-2 cursor-pointer"
-									onclick={() => {
-										tags = tags.filter((t) => t !== tag);
-									}}
-								>
-									x
-								</div></Badge
-							>
-						{/each}
-
-						{#if !isAddingTag}
-							<Button
-								variant="ghost"
-								class="text-sm text-primary font-semibold rounded-full"
-								on:click={() => (isAddingTag = true)}>+</Button
-							>
-						{:else}
-							<div class="flex items-center">
-								<input
-									id="tag"
-									name="tag"
-									type="text"
-									bind:value={tag}
-									placeholder="tag"
-									class="w-32 border-b-2 border-primary bg-transparent px-2 mr-2 text-sm"
-									onkeydown={(e) => {
-										if (e.key === 'Enter') {
-											tags.push(tag);
-											tag = '';
-											isAddingTag = false;
-										}
-									}}
-								/>
-								<Button
-									variant="default"
-									class="text-sm"
-									on:click={() => {
-										tags.push(tag);
-										tag = '';
-										isAddingTag = false;
-									}}>v</Button
-								>
-								<Button
-									variant="destructive"
-									class="text-sm ml-1"
-									on:click={() => {
-										tag = '';
-										isAddingTag = false;
-									}}>x</Button
-								>
-							</div>
-						{/if}
-					</div>
-				</div>
+				<Tags {tags} onTagsChange={handleTagsChange} />
 
 				<!-- Rating -->
 				<div class="flex mt-4">
