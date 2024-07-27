@@ -51,9 +51,9 @@
 	}
 </script>
 
-<div class="flex justify-start mt-4">
+<div class="flex justify-start mt-2">
 	<Sheet.Root>
-		<Sheet.Trigger class="text-primary text-sm font-semibold">+ Details</Sheet.Trigger>
+		<Sheet.Trigger class="text-primary text-xs font-semibold">+ Details</Sheet.Trigger>
 		<Sheet.Content class="min-w-[800px] p-16">
 			<ScrollArea class="h-[105%] w-full">
 				<div class="flex w-full items-start justify-start">

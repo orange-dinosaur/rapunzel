@@ -7,6 +7,10 @@ import { fail, redirect, type Cookies } from '@sveltejs/kit';
 import { AppwriteException } from 'node-appwrite';
 
 export async function load({ locals }) {
+	console.log('--------------------------------------------');
+	console.log('LOGIN LOAD FUNCTION');
+	console.log('--------------------------------------------');
+
 	if (locals.user && locals.user.emailVerification) {
 		// If the user is logged in and is email is verified, redirect to its home page.
 		redirect(301, `/users/${locals.user.$id}`);
@@ -64,6 +68,10 @@ export const actions = {
 				}
 			});
 		}
+
+		console.log('--------------------------------------------');
+		console.log('LOGIN ACTION');
+		console.log('--------------------------------------------');
 
 		// Redirect to the account page.
 		redirect(301, `/users/${session.userId}`);

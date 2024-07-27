@@ -1,4 +1,4 @@
-import type { BookSaved } from '$lib/types/book/book';
+import type { UserBooks } from '$lib/types/book/book';
 import type { Models } from 'node-appwrite';
 
 // See https://kit.svelte.dev/docs/types#app
@@ -8,7 +8,7 @@ declare global {
 		// interface Error {}
 		interface Locals {
 			user: Models.User<Models.Preferences> | undefined;
-			userBooks: BookSaved[];
+			userBooks: UserBooks | undefined;
 		}
 		// interface PageData {}
 		// interface PageState {}
