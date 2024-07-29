@@ -2,6 +2,7 @@
 	import { page } from '$app/stores';
 	import { Button } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';
+	import * as Tooltip from '$lib/components/ui/tooltip';
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
 	import * as Avatar from '$lib/components/ui/avatar';
 	import { Search, Home, Book, Bookmark, Star, Award, LoaderCircle } from 'lucide-svelte';
@@ -59,51 +60,100 @@
 
 			<!-- Links -->
 			<div class="h-full flex flex-col items-start justify-center">
-				<Button
-					on:click={() => (searchString = '')}
-					href={'/users/' + user?.$id}
-					class="${$page.url.pathname === '/users/' + user?.$id
-						? 'h-12 min-h-12 w-12 p-0 m-0 mb-2 rounded-full'
-						: 'h-12 min-h-12 w-12 p-0 m-0 mb-2 rounded-full bg-background text-primary hover:text-background'}"
-				>
-					<Home size={24} />
-				</Button>
-				<Button
-					on:click={() => (searchString = '')}
-					href={'/users/' + user?.$id + '/books'}
-					class="${$page.url.pathname === '/users/' + user?.$id + '/books'
-						? 'h-12 min-h-12 w-12 p-0 m-0 mb-2 rounded-full'
-						: 'h-12 min-h-12 w-12 p-0 m-0 mb-2 rounded-full bg-background text-primary hover:text-background'}"
-				>
-					<Book size={24} />
-				</Button>
-				<Button
-					on:click={() => (searchString = '')}
-					href={'/users/' + user?.$id + '/bookmarks'}
-					class="${$page.url.pathname === '/users/' + user?.$id + '/bookmarks'
-						? 'h-12 min-h-12 w-12 p-0 m-0 mb-2 rounded-full'
-						: 'h-12 min-h-12 w-12 p-0 m-0 mb-2 rounded-full bg-background text-primary hover:text-background'}"
-				>
-					<Bookmark size={24} />
-				</Button>
-				<Button
-					on:click={() => (searchString = '')}
-					href={'/users/' + user?.$id + '/favorites'}
-					class="${$page.url.pathname === '/users/' + user?.$id + '/favorites'
-						? 'h-12 min-h-12 w-12 p-0 m-0 mb-2 rounded-full'
-						: 'h-12 min-h-12 w-12 p-0 m-0 mb-2 rounded-full bg-background text-primary hover:text-background'}"
-				>
-					<Star size={24} />
-				</Button>
-				<Button
-					on:click={() => (searchString = '')}
-					href={'/users/' + user?.$id + '/awards'}
-					class="${$page.url.pathname === '/users/' + user?.$id + '/awards'
-						? 'h-12 min-h-12 w-12 p-0 m-0 mb-2 rounded-full'
-						: 'h-12 min-h-12 w-12 p-0 m-0 mb-2 rounded-full bg-background text-primary hover:text-background'}"
-				>
-					<Award size={24} />
-				</Button>
+				<!-- Home -->
+				<Tooltip.Root>
+					<Tooltip.Trigger asChild let:builder>
+						<Button
+							builders={[builder]}
+							on:click={() => (searchString = '')}
+							href={'/users/' + user?.$id}
+							class="${$page.url.pathname === '/users/' + user?.$id
+								? 'h-12 min-h-12 w-12 p-0 m-0 mb-2 rounded-full'
+								: 'h-12 min-h-12 w-12 p-0 m-0 mb-2 rounded-full bg-background text-primary hover:text-background'}"
+						>
+							<Home size={24} />
+						</Button>
+					</Tooltip.Trigger>
+					<Tooltip.Content>
+						<p>Home</p>
+					</Tooltip.Content>
+				</Tooltip.Root>
+
+				<!-- Books -->
+				<Tooltip.Root>
+					<Tooltip.Trigger asChild let:builder>
+						<Button
+							builders={[builder]}
+							on:click={() => (searchString = '')}
+							href={'/users/' + user?.$id + '/books'}
+							class="${$page.url.pathname === '/users/' + user?.$id + '/books'
+								? 'h-12 min-h-12 w-12 p-0 m-0 mb-2 rounded-full'
+								: 'h-12 min-h-12 w-12 p-0 m-0 mb-2 rounded-full bg-background text-primary hover:text-background'}"
+						>
+							<Book size={24} />
+						</Button>
+					</Tooltip.Trigger>
+					<Tooltip.Content>
+						<p>Books</p>
+					</Tooltip.Content>
+				</Tooltip.Root>
+
+				<!-- Bookmarks -->
+				<Tooltip.Root>
+					<Tooltip.Trigger asChild let:builder>
+						<Button
+							builders={[builder]}
+							on:click={() => (searchString = '')}
+							href={'/users/' + user?.$id + '/bookmarks'}
+							class="${$page.url.pathname === '/users/' + user?.$id + '/bookmarks'
+								? 'h-12 min-h-12 w-12 p-0 m-0 mb-2 rounded-full'
+								: 'h-12 min-h-12 w-12 p-0 m-0 mb-2 rounded-full bg-background text-primary hover:text-background'}"
+						>
+							<Bookmark size={24} />
+						</Button>
+					</Tooltip.Trigger>
+					<Tooltip.Content>
+						<p>Bookmarks</p>
+					</Tooltip.Content>
+				</Tooltip.Root>
+
+				<!-- Favorites -->
+				<Tooltip.Root>
+					<Tooltip.Trigger asChild let:builder>
+						<Button
+							builders={[builder]}
+							on:click={() => (searchString = '')}
+							href={'/users/' + user?.$id + '/favorites'}
+							class="${$page.url.pathname === '/users/' + user?.$id + '/favorites'
+								? 'h-12 min-h-12 w-12 p-0 m-0 mb-2 rounded-full'
+								: 'h-12 min-h-12 w-12 p-0 m-0 mb-2 rounded-full bg-background text-primary hover:text-background'}"
+						>
+							<Star size={24} />
+						</Button>
+					</Tooltip.Trigger>
+					<Tooltip.Content>
+						<p>Favorites</p>
+					</Tooltip.Content>
+				</Tooltip.Root>
+
+				<!-- Awards -->
+				<Tooltip.Root>
+					<Tooltip.Trigger asChild let:builder>
+						<Button
+							builders={[builder]}
+							on:click={() => (searchString = '')}
+							href={'/users/' + user?.$id + '/awards'}
+							class="${$page.url.pathname === '/users/' + user?.$id + '/awards'
+								? 'h-12 min-h-12 w-12 p-0 m-0 mb-2 rounded-full'
+								: 'h-12 min-h-12 w-12 p-0 m-0 mb-2 rounded-full bg-background text-primary hover:text-background'}"
+						>
+							<Award size={24} />
+						</Button>
+					</Tooltip.Trigger>
+					<Tooltip.Content>
+						<p>Awards</p>
+					</Tooltip.Content>
+				</Tooltip.Root>
 			</div>
 		</div>
 
