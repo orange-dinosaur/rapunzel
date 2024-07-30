@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { LoaderCircle } from 'lucide-svelte';
 	import { Button } from '$lib/components/ui/button';
 	import { ScrollArea } from '$lib/components/ui/scroll-area';
 	import * as Select from '$lib/components/ui/select';
@@ -6,23 +7,28 @@
 	import { BookToSave } from '$lib/types/book/book';
 	import StarRating from '../rating/StarRating.svelte';
 	import Tags from '../tags/Tags.svelte';
+	import BookFull from './BookFull.svelte';
 
-	let { book }: { book: any } = $props();
+	let isLoadingUpdate = $state(false);
+	let isLoadingRemove = $state(false);
+	let isLoadingWhishlist = $state(false);
 
-	let readingStatus = $state('to-read');
-	let bookType = $state('book');
+	let { book }: { book: BookFull } = $props();
 
-	let tags: string[] = $state([]);
+	let readingStatus = $state(book.readingStatus);
+	let bookType = $state(book.bookType);
+
+	let tags: string[] = $state(book.tags);
 	function handleTagsChange(newTags: string[]) {
 		tags = newTags;
 	}
 
-	let rating: number = $state(2);
+	let rating: number = $state(book.rating);
 	function handleRatingChange(newRating: number) {
 		rating = newRating;
 	}
 
-	async function saveBookToLibrary() {
+	async function updateBookInLibrary() {
 		const bookToSave = new BookToSave({
 			bookId: book.id,
 			readingStatus,
@@ -31,11 +37,9 @@
 			rating
 		}).toPlainObject();
 
-		console.log('--------------------------------------------');
-		console.log(bookToSave);
-		console.log('--------------------------------------------');
+		isLoadingUpdate = true;
 
-		const res = await fetch('/api/save-book', {
+		const res = await fetch('/api/update-book', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json'
@@ -47,6 +51,26 @@
 
 		if (res.ok) {
 			console.log('RES OK');
+			isLoadingUpdate = false;
+		}
+	}
+
+	async function removeBookFromLibrary() {
+		isLoadingRemove = true;
+
+		const res = await fetch('/api/remove-book', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				bookId: book.id
+			})
+		});
+
+		if (res.ok) {
+			console.log('RES OK');
+			isLoadingRemove = false;
 		}
 	}
 </script>
@@ -60,10 +84,37 @@
 					<!-- Book Cover -->
 					<img src={book.cover} alt={book.title} class="h-60 w-auto mb-8" />
 
-					<!-- Actions (Add to library or Save to whishlist) -->
+					<!-- Actions (Update ) -->
 					<div class="h-60 flex flex-col justify-end ml-4">
-						<Button class="mb-2" on:click={saveBookToLibrary}>Add to library</Button>
-						<Button variant="outline">Save to whishlist</Button>
+						<Button
+							class="mb-2"
+							disabled={isLoadingUpdate || isLoadingRemove || isLoadingWhishlist}
+							on:click={updateBookInLibrary}
+							>{#if isLoadingUpdate}
+								<LoaderCircle class="mr-2 h-4 w-4 animate-spin" />
+							{/if}
+							Update Book
+						</Button>
+						<Button
+							class="mb-2"
+							disabled={isLoadingUpdate || isLoadingRemove || isLoadingWhishlist}
+							on:click={removeBookFromLibrary}
+							variant="destructive"
+						>
+							{#if isLoadingRemove}
+								<LoaderCircle class="mr-2 h-4 w-4 animate-spin" />
+							{/if}
+							Remove from library
+						</Button>
+						<!-- TODO: Create function -->
+						<Button
+							variant="outline"
+							disabled={isLoadingUpdate || isLoadingRemove || isLoadingWhishlist}
+							>{#if isLoadingWhishlist}
+								<LoaderCircle class="mr-2 h-4 w-4 animate-spin" />
+							{/if}
+							Save to whishlist
+						</Button>
 					</div>
 				</div>
 
@@ -104,7 +155,7 @@
 						</div>
 
 						<!-- Book Description -->
-						<ScrollArea class="min-h-40 h-32 w-full text-sm text-muted-foreground mt-6"
+						<ScrollArea class="min-h-28 h-28 w-full text-sm text-muted-foreground mt-6"
 							>{book.description}</ScrollArea
 						>
 					</Sheet.Description>

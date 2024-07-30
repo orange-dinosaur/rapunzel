@@ -5,18 +5,15 @@ export const POST: RequestHandler = async ({ request, locals }): Promise<Respons
 		return new Response('Unauthorized', { status: 401 });
 	}
 
-	const { bookToSave } = await request.json();
-
-	// set the userId of the book to be saved to the current user's id
-	bookToSave.userId = locals.user.$id;
+	const { bookId } = await request.json();
 
 	for (let i = 0; i < 2000; i++) {
 		// do nothing
 	}
 
 	console.log('----------------------------------------------');
-	console.log(bookToSave);
+	console.log(bookId);
 	console.log('----------------------------------------------');
 
-	return new Response('Book Succcessfully Saved');
+	return new Response('Book Succcessfully Removed');
 };

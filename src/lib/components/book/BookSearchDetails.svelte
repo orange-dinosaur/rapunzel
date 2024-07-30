@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { LoaderCircle } from 'lucide-svelte';
 	import { Button } from '$lib/components/ui/button';
 	import { ScrollArea } from '$lib/components/ui/scroll-area';
 	import * as Select from '$lib/components/ui/select';
@@ -6,6 +7,9 @@
 	import { BookToSave } from '$lib/types/book/book';
 	import StarRating from '../rating/StarRating.svelte';
 	import Tags from '../tags/Tags.svelte';
+
+	let isLoadingSave = $state(false);
+	let isLoadingWishlist = $state(false);
 
 	let { book }: { book: any } = $props();
 
@@ -31,9 +35,7 @@
 			rating
 		}).toPlainObject();
 
-		console.log('--------------------------------------------');
-		console.log(bookToSave);
-		console.log('--------------------------------------------');
+		isLoadingSave = true;
 
 		const res = await fetch('/api/save-book', {
 			method: 'POST',
@@ -47,6 +49,7 @@
 
 		if (res.ok) {
 			console.log('RES OK');
+			isLoadingSave = false;
 		}
 	}
 </script>
@@ -62,8 +65,22 @@
 
 					<!-- Actions (Add to library or Save to whishlist) -->
 					<div class="h-60 flex flex-col justify-end ml-4">
-						<Button class="mb-2" on:click={saveBookToLibrary}>Add to library</Button>
-						<Button variant="outline">Save to whishlist</Button>
+						<Button
+							class="mb-2"
+							disabled={isLoadingSave || isLoadingWishlist}
+							on:click={saveBookToLibrary}
+							>{#if isLoadingSave}
+								<LoaderCircle class="mr-2 h-4 w-4 animate-spin" />
+							{/if}
+							Add to library
+						</Button>
+						<!-- TODO: Create function -->
+						<Button variant="outline" disabled={isLoadingSave || isLoadingWishlist}
+							>{#if isLoadingWishlist}
+								<LoaderCircle class="mr-2 h-4 w-4 animate-spin" />
+							{/if}
+							Save to whishlist
+						</Button>
 					</div>
 				</div>
 
@@ -104,7 +121,7 @@
 						</div>
 
 						<!-- Book Description -->
-						<ScrollArea class="min-h-40 h-32 w-full text-sm text-muted-foreground mt-6"
+						<ScrollArea class="min-h-28 h-28 w-full text-sm text-muted-foreground mt-6"
 							>{book.description}</ScrollArea
 						>
 					</Sheet.Description>
