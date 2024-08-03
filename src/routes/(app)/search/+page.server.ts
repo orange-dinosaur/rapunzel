@@ -1,5 +1,5 @@
 //import { GOOGLE_BOOKS_API_KEY } from '$env/static/private';
-import { BookSearch } from '$lib/types/book/book.js';
+import { BookSearch, UserBooks } from '$lib/types/book/book.js';
 import { redirect } from '@sveltejs/kit';
 
 export async function load({ locals, url }) {
@@ -40,11 +40,24 @@ export async function load({ locals, url }) {
 
 	// convert the books to plain objects so that they can be sent to the client and serialized
 	const plainObjectBooks = books.map((book) => book.toPlainObject());
+	console.log(plainObjectBooks);
+
+	// check if the user has books
+	let userBooks: UserBooks;
+	if (locals.userBooks && locals.userBooks.userId === locals.user.$id) {
+		userBooks = locals.userBooks;
+	} else {
+		userBooks = new UserBooks(locals.user.$id);
+	}
+
+	// convert the books to plain objects so that they can be sent to the client and serialized
+	const plainObjectUserBooks = userBooks.books.map((book) => book.toPlainObject());
 
 	return {
 		user: locals.user,
 		searchString,
-		books: plainObjectBooks
+		books: plainObjectBooks,
+		userBooks: plainObjectUserBooks
 	};
 }
 

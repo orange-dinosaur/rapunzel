@@ -53,7 +53,10 @@
 	{#if data.books.length > 0}
 		{#each data.books as book}
 			<div class="w-3/5 py-8 flex">
-				<BookSearch {book} />
+				<BookSearch
+					{book}
+					alreadySaved={data.userBooks.some((userBook) => userBook.id === book.id)}
+				/>
 			</div>
 		{/each}
 	{:else}
