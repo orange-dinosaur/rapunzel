@@ -1,4 +1,4 @@
-import { PUBLIC_EMAIL_VERIFICATION_PATH } from '$env/static/public';
+import { PUBLIC_AVATAR_BASE_URL, PUBLIC_EMAIL_VERIFICATION_PATH } from '$env/static/public';
 import {
 	SESSION_COOKIE,
 	createAdminClient,
@@ -43,11 +43,7 @@ export const actions = {
 				path: '/'
 			});
 
-			await updateSinglePreference(
-				cookies,
-				'avatar',
-				`https://source.boringavatars.com/marble/120/${username}`
-			);
+			await updateSinglePreference(cookies, 'avatar', `${PUBLIC_AVATAR_BASE_URL}${username}`);
 
 			await createVerification(cookies);
 		} catch (error) {

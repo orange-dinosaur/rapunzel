@@ -10,6 +10,7 @@
 	import logo from '$lib/assets/logo.png';
 	import { goto } from '$app/navigation';
 	import { browser } from '$app/environment';
+	import { PUBLIC_AVATAR_BASE_URL } from '$env/static/public';
 
 	export let data;
 
@@ -19,11 +20,9 @@
 
 	// TODO: make sure that the user object is not null, so that we can access the pages without errors
 	const { user } = data;
-	let avatarUrl = 'https://source.boringavatars.com/marble/120/Maria%20Mitchell';
+	let avatarUrl = PUBLIC_AVATAR_BASE_URL + 'rapunzel';
 	if (user?.prefs && 'avatar' in user?.prefs) {
-		avatarUrl =
-			user.prefs.avatar?.toString() ??
-			'https://source.boringavatars.com/marble/120/Maria%20Mitchell';
+		avatarUrl = user.prefs.avatar?.toString() ?? PUBLIC_AVATAR_BASE_URL + 'rapunzel';
 	}
 
 	async function logout() {
@@ -211,10 +210,10 @@
 							</div>
 						</DropdownMenu.Label>
 						<DropdownMenu.Separator />
-						<DropdownMenu.Group>
+						<!-- <DropdownMenu.Group>
 							<DropdownMenu.Item>Settings</DropdownMenu.Item>
 						</DropdownMenu.Group>
-						<DropdownMenu.Separator />
+						<DropdownMenu.Separator /> -->
 						<DropdownMenu.Item on:click={logout}>Log out</DropdownMenu.Item>
 					</DropdownMenu.Content>
 				</DropdownMenu.Root>

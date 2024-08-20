@@ -23,6 +23,7 @@ export class UserBooks {
 
 export class BookFull {
 	id: string;
+	bookId: string;
 	title: string;
 	authors: string[];
 	publisher: string;
@@ -43,6 +44,7 @@ export class BookFull {
 
 	constructor(obj?: object) {
 		this.id = '';
+		this.bookId = '';
 		this.title = '';
 		this.authors = [];
 		this.publisher = '';
@@ -65,6 +67,10 @@ export class BookFull {
 			// check if properties are available in the object passed
 			if ('id' in obj) {
 				this.id = (obj.id as string).toString();
+			}
+
+			if ('bookId' in obj) {
+				this.bookId = (obj.bookId as string).toString();
 			}
 
 			if ('title' in obj) {
@@ -153,6 +159,7 @@ export class BookFull {
 	toPlainObject() {
 		return {
 			id: this.id,
+			bookId: this.bookId,
 			title: this.title,
 			authors: this.authors,
 			publisher: this.publisher,
