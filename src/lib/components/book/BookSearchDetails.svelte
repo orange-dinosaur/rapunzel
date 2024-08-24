@@ -75,12 +75,12 @@
 							Add to library
 						</Button>
 						<!-- TODO: Create function -->
-						<Button variant="outline" disabled={isLoadingSave || isLoadingWishlist}
+						<!-- <Button variant="outline" disabled={isLoadingSave || isLoadingWishlist}
 							>{#if isLoadingWishlist}
 								<LoaderCircle class="mr-2 h-4 w-4 animate-spin" />
 							{/if}
 							Save to whishlist
-						</Button>
+						</Button> -->
 					</div>
 				</div>
 

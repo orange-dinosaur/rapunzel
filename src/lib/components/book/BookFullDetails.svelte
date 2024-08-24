@@ -107,14 +107,14 @@
 							Remove from library
 						</Button>
 						<!-- TODO: Create function -->
-						<Button
+						<!-- <Button
 							variant="outline"
 							disabled={isLoadingUpdate || isLoadingRemove || isLoadingWhishlist}
 							>{#if isLoadingWhishlist}
 								<LoaderCircle class="mr-2 h-4 w-4 animate-spin" />
 							{/if}
 							Save to whishlist
-						</Button>
+						</Button> -->
 					</div>
 				</div>
 
