@@ -1,26 +1,27 @@
 <script>
+	import { Separator } from '$lib/components/ui/separator';
+
 	export let data;
 
-	const { user } = data;
+	const { user, userBooks } = data;
 </script>
 
-<h1>THIS PAGE IS "BOOKMARKS"</h1>
+<div class="ml-16 pr-36">
+	<div class="w-full bg-background mb-4">
+		<h1 class="text-3xl font-semibold text-foreground">Bookmark Page - Work in progress</h1>
+		<Separator class="h-1 mt-2 pr-8 bg-foreground" />
+	</div>
 
-<ul>
-	<li>
-		<strong>Email:</strong>
-		{user.email}
-	</li>
-	<li>
-		<strong>Name:</strong>
-		{user.name}
-	</li>
-	<li>
-		<strong>ID: </strong>
-		{user.$id}
-	</li>
-</ul>
-
-<form method="post">
-	<button type="submit">Log out</button>
-</form>
+	<div class="h-full w-full">
+		<ul>
+			<li>
+				<strong>Email:</strong>
+				{user.email}
+			</li>
+			<li>
+				<strong>Name:</strong>
+				{user.name}
+			</li>
+		</ul>
+	</div>
+</div>
