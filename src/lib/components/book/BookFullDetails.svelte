@@ -9,6 +9,24 @@
 	import Tags from '../tags/Tags.svelte';
 	import BookFull from './BookFull.svelte';
 
+	let isReadingStatusChanged = $state(false);
+	let isReadingStartDateChanged = $state(false);
+	let isReadingEndDateChanged = $state(false);
+	let isBookTypeChanged = $state(false);
+	let isTagsChanged = $state(false);
+	let isRatingChanged = $state(false);
+
+	let isBookChanged = () => {
+		return (
+			isReadingStatusChanged ||
+			isReadingStartDateChanged ||
+			isReadingEndDateChanged ||
+			isBookTypeChanged ||
+			isTagsChanged ||
+			isRatingChanged
+		);
+	};
+
 	let isLoadingUpdate = $state(false);
 	let isLoadingRemove = $state(false);
 	let isLoadingWhishlist = $state(false);
@@ -21,11 +39,21 @@
 	let tags: string[] = $state(book.tags);
 	function handleTagsChange(newTags: string[]) {
 		tags = newTags;
+		if (newTags !== book.tags) {
+			isTagsChanged = true;
+		} else {
+			isTagsChanged = false;
+		}
 	}
 
 	let rating: number = $state(book.rating);
 	function handleRatingChange(newRating: number) {
 		rating = newRating;
+		if (newRating !== book.rating) {
+			isRatingChanged = true;
+		} else {
+			isRatingChanged = false;
+		}
 	}
 
 	async function updateBookInLibrary() {
@@ -88,7 +116,10 @@
 					<div class="h-60 flex flex-col justify-end ml-4">
 						<Button
 							class="mb-2"
-							disabled={isLoadingUpdate || isLoadingRemove || isLoadingWhishlist}
+							disabled={!isBookChanged() ||
+								isLoadingUpdate ||
+								isLoadingRemove ||
+								isLoadingWhishlist}
 							on:click={updateBookInLibrary}
 							>{#if isLoadingUpdate}
 								<LoaderCircle class="mr-2 h-4 w-4 animate-spin" />
@@ -169,6 +200,11 @@
 							selected={readingStatus ? { label: readingStatus, value: readingStatus } : undefined}
 							onSelectedChange={(v) => {
                                 v && (readingStatus = v.value as string);
+								if (v && v.value !== book.readingStatus) {
+									isReadingStatusChanged = true;
+								} else {
+									isReadingStatusChanged = false;
+								}
                             }}
 						>
 							<Select.Trigger class="w-[180px] text-sm">
@@ -190,6 +226,11 @@
 							selected={bookType ? { label: bookType, value: bookType } : undefined}
 							onSelectedChange={(v) => {
                             v && (bookType = v.value as string);
+                            if (v && v.value !== book.bookType) {
+                                isBookTypeChanged = true;
+                            } else {
+                                isBookTypeChanged = false;
+                            }
                         }}
 						>
 							<Select.Trigger class="w-[180px] text-sm">
