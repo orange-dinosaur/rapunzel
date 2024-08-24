@@ -1,3 +1,5 @@
+/* TODO: define possible values for readingStatus field */
+
 export class UserBooks {
 	userId: string;
 	books: BookFull[];
