@@ -38,6 +38,8 @@ export class BookFull {
 	language: string;
 	cover: string;
 	readingStatus: string;
+	readingStartDate: Date;
+	readingEndDate: Date;
 	bookType: string;
 	tags: string[];
 	rating: number;
@@ -59,6 +61,8 @@ export class BookFull {
 		this.language = '';
 		this.cover = 'https://i.pinimg.com/originals/a0/69/7a/a0697af2de64d67cf6dbb2a13dbc0457.png';
 		this.readingStatus = '';
+		this.readingStartDate = new Date(Date.UTC(0, 0, 0));
+		this.readingEndDate = new Date(Date.UTC(0, 0, 0));
 		this.bookType = '';
 		this.tags = [];
 		this.rating = 0;
@@ -136,6 +140,14 @@ export class BookFull {
 				this.readingStatus = (obj.readingStatus as string).toString();
 			}
 
+			if ('readingStartDate' in obj) {
+				this.readingStartDate = new Date(obj.readingStartDate as string);
+			}
+
+			if ('readingEndDate' in obj) {
+				this.readingEndDate = new Date(obj.readingEndDate as string);
+			}
+
 			if ('bookType' in obj) {
 				this.bookType = (obj.bookType as string).toString();
 			}
@@ -174,6 +186,8 @@ export class BookFull {
 			language: this.language,
 			cover: this.cover,
 			readingStatus: this.readingStatus,
+			readingStartDate: this.readingStartDate,
+			readingEndDate: this.readingEndDate,
 			bookType: this.bookType,
 			tags: this.tags,
 			rating: this.rating,
@@ -318,6 +332,8 @@ export class BookToSave {
 	bookId: string;
 	userId: string;
 	readingStatus: string;
+	readingStartDate: Date;
+	readingEndDate: Date;
 	bookType: string;
 	tags: string[];
 	rating: number;
@@ -337,6 +353,8 @@ export class BookToSave {
 		this.bookId = '';
 		this.userId = '';
 		this.readingStatus = '';
+		this.readingStartDate = new Date(Date.UTC(0, 0, 0));
+		this.readingEndDate = new Date(Date.UTC(0, 0, 0));
 		this.bookType = '';
 		this.tags = [];
 		this.rating = 0;
@@ -354,6 +372,14 @@ export class BookToSave {
 
 			if ('readingStatus' in obj) {
 				this.readingStatus = (obj.readingStatus as string).toString();
+			}
+
+			if ('readingStartDate' in obj) {
+				this.readingStartDate = new Date(obj.readingStartDate as string);
+			}
+
+			if ('readingEndDate' in obj) {
+				this.readingEndDate = new Date(obj.readingEndDate as string);
 			}
 
 			if ('bookType' in obj) {
