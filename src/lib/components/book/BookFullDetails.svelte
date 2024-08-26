@@ -34,6 +34,7 @@
 	let { book }: { book: BookFull } = $props();
 
 	let readingStatus = $state(book.readingStatus);
+
 	let bookType = $state(book.bookType);
 
 	let tags: string[] = $state(book.tags);
@@ -198,7 +199,7 @@
 						<p class="text-sm text-muted-foreground font-semibold mr-2">Reading status:</p>
 						<Select.Root
 							selected={readingStatus ? { label: readingStatus, value: readingStatus } : undefined}
-							onSelectedChange={(v) => {
+							onSelectedChange={(v: { value: string; }) => {
                                 v && (readingStatus = v.value as string);
 								if (v && v.value !== book.readingStatus) {
 									isReadingStatusChanged = true;
@@ -224,7 +225,7 @@
 						<p class="text-sm text-muted-foreground font-semibold mr-2">Book type:</p>
 						<Select.Root
 							selected={bookType ? { label: bookType, value: bookType } : undefined}
-							onSelectedChange={(v) => {
+							onSelectedChange={(v: { value: string; }) => {
                             v && (bookType = v.value as string);
                             if (v && v.value !== book.bookType) {
                                 isBookTypeChanged = true;
