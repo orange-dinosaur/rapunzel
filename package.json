@@ -34,7 +34,7 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"bits-ui": "^0.21.6",
+		"@internationalized/date": "^3.5.5",
 		"clsx": "^2.1.1",
 		"lucide-svelte": "^0.376.1",
 		"node-appwrite": "^12.0.1",
