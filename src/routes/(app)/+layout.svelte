@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import { page } from '$app/stores';
 	import { Button } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';
@@ -11,15 +11,26 @@
 	import { goto } from '$app/navigation';
 	import { browser } from '$app/environment';
 	import { PUBLIC_AVATAR_BASE_URL } from '$env/static/public';
+	import { Toaster } from 'svelte-sonner';
+	import { UserBooks } from '$lib/types/book/book.js';
+	import { userData, type UserData } from '$lib/state/state.svelte';
 
+	// get the loaded data from the server
 	export let data;
+	const { user, userBooks } = data;
+
+	// set the state for the user
+	const userDataInitialValue: UserData = {
+		user: user,
+		userBooks: UserBooks.fromJSON(userBooks)
+	};
+	userData.set(userDataInitialValue);
 
 	let searchString = '';
 
 	let isLoading = false;
 
 	// TODO: make sure that the user object is not null, so that we can access the pages without errors
-	const { user } = data;
 	let avatarUrl = PUBLIC_AVATAR_BASE_URL + 'rapunzel';
 	if (user?.prefs && 'avatar' in user?.prefs) {
 		avatarUrl = user.prefs.avatar?.toString() ?? PUBLIC_AVATAR_BASE_URL + 'rapunzel';
@@ -41,13 +52,15 @@
 	/**
 	 * @param {{ preventDefault: () => void; }} event
 	 */
-	async function handleSearchSubmit(event) {
+	async function handleSearchSubmit(event: { preventDefault: () => void }) {
 		event.preventDefault(); // Prevent default form submission
 		isLoading = true; // Show loading spinner
 		await goto('/search?searchString=' + searchString); // Navigate to the target page
 		isLoading = false; // Hide loading spinner
 	}
 </script>
+
+<Toaster richColors />
 
 <div class="flex">
 	<!-- Left Navigation -->

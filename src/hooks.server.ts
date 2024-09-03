@@ -13,11 +13,6 @@ export async function handle({ event, resolve }) {
 		/* empty */
 	}
 
-	console.log('--------------------------------------------');
-	console.log('HOOK SERVER');
-	console.log('event.locals.user.id:', event.locals.user?.$id);
-	console.log('--------------------------------------------');
-
 	// Try to get the user's books from the database
 	if (event.locals.user) {
 		try {

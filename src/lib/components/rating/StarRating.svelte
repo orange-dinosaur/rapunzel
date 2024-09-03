@@ -43,7 +43,6 @@
 			checked={(roundedStars * 2 - star) / 2 === roundedRating}
 			bind:group={selectedRating}
 			onchange={() => {
-				console.log('SELECTED RATING INSIDE CHILD: ', selectedRating);
                 handleRatingChange(selectedRating as number);
 			}}
 		/>

@@ -15,17 +15,24 @@ export class UserBooks {
 		}
 	}
 
-	toPlainObject() {
+	toJSON() {
 		return {
 			userId: this.userId,
-			books: this.books.map((book) => book.toPlainObject())
+			books: this.books.map((book) => book.toJSON())
 		};
+	}
+
+	static fromJSON(json: { userId: string; books: BookFullJSON[] }) {
+		return new UserBooks(json.userId, {
+			books: json.books.map((book) => BookFull.fromJSON(book))
+		});
 	}
 }
 
 export class BookFull {
 	id: string;
 	bookId: string;
+	userId: string;
 	title: string;
 	authors: string[];
 	publisher: string;
@@ -49,6 +56,7 @@ export class BookFull {
 	constructor(obj?: object) {
 		this.id = '';
 		this.bookId = '';
+		this.userId = '';
 		this.title = '';
 		this.authors = [];
 		this.publisher = '';
@@ -77,6 +85,10 @@ export class BookFull {
 
 			if ('bookId' in obj) {
 				this.bookId = (obj.bookId as string).toString();
+			}
+
+			if ('userId' in obj) {
+				this.userId = (obj.userId as string).toString();
 			}
 
 			if ('title' in obj) {
@@ -126,14 +138,8 @@ export class BookFull {
 				this.language = (obj.language as string).toString();
 			}
 
-			if ('imageLinks' in obj) {
-				const imageLinks = obj.imageLinks as object;
-
-				if ('thumbnail' in imageLinks) {
-					this.cover = (imageLinks.thumbnail as string).toString();
-				} else if ('smallThumbnail' in imageLinks) {
-					this.cover = (imageLinks.smallThumbnail as string).toString();
-				}
+			if ('cover' in obj) {
+				this.cover = (obj.cover as string).toString();
 			}
 
 			if ('readingStatus' in obj) {
@@ -170,10 +176,11 @@ export class BookFull {
 		}
 	}
 
-	toPlainObject() {
+	toJSON() {
 		return {
 			id: this.id,
 			bookId: this.bookId,
+			userId: this.userId,
 			title: this.title,
 			authors: this.authors,
 			publisher: this.publisher,
@@ -195,7 +202,59 @@ export class BookFull {
 			libraryId: this.libraryId
 		};
 	}
+
+	static fromJSON(json: BookFullJSON) {
+		return new BookFull({
+			id: json.id,
+			bookId: json.bookId,
+			userId: json.userId,
+			title: json.title,
+			authors: json.authors,
+			publisher: json.publisher,
+			publishedDate: json.publishedDate,
+			description: json.description,
+			isbn10: json.isbn10,
+			isbn13: json.isbn13,
+			pageCount: json.pageCount,
+			categories: json.categories,
+			language: json.language,
+			cover: json.cover,
+			readingStatus: json.readingStatus,
+			readingStartDate: json.readingStartDate,
+			readingEndDate: json.readingEndDate,
+			bookType: json.bookType,
+			tags: json.tags,
+			rating: json.rating,
+			notes: json.notes,
+			libraryId: json.libraryId
+		});
+	}
 }
+
+export type BookFullJSON = {
+	id: string;
+	bookId: string;
+	userId: string;
+	title: string;
+	authors: string[];
+	publisher: string;
+	publishedDate: string;
+	description: string;
+	isbn10: string;
+	isbn13: string;
+	pageCount: number;
+	categories: string[];
+	language: string;
+	cover: string;
+	readingStatus: string;
+	readingStartDate: Date;
+	readingEndDate: Date;
+	bookType: string;
+	tags: string[];
+	rating: number;
+	notes: string;
+	libraryId: string;
+};
 
 export class BookSearch {
 	id: string;
@@ -310,7 +369,7 @@ export class BookSearch {
 		}
 	}
 
-	toPlainObject() {
+	toJSON() {
 		return {
 			id: this.id,
 			title: this.title,
@@ -344,6 +403,8 @@ export class BookToSave {
 		bookId: string;
 		userId?: string;
 		readingStatus?: string;
+		readingStartDate?: string;
+		readingEndDate?: string;
 		bookType?: string;
 		tags?: string[];
 		rating?: number;
@@ -404,15 +465,96 @@ export class BookToSave {
 		}
 	}
 
-	toPlainObject() {
+	toJSON() {
 		return {
-			id: this.bookId,
+			bookId: this.bookId,
+			userId: this.userId,
 			readingStatus: this.readingStatus,
+			readingStartDate: this.readingStartDate,
+			readingEndDate: this.readingEndDate,
 			bookType: this.bookType,
 			tags: this.tags,
 			rating: this.rating,
 			notes: this.notes,
 			libraryId: this.libraryId
 		};
+	}
+}
+
+export class BookToUpdate {
+	readingStatus?: string;
+	readingStartDate?: Date;
+	readingEndDate?: Date;
+	bookType?: string;
+	tags?: string[];
+	rating?: number;
+	notes?: string;
+	libraryId?: string;
+
+	constructor(obj?: {
+		readingStatus: string | undefined;
+		readingStartDate: string | undefined;
+		readingEndDate: string | undefined;
+		bookType: string | undefined;
+		tags: string[] | undefined;
+		rating: number | undefined;
+		notes: string | undefined;
+		libraryId: string | undefined;
+	}) {
+		if (obj != undefined) {
+			if ('readingStatus' in obj && obj.readingStatus != undefined) {
+				this.readingStatus = (obj.readingStatus as string).toString();
+			}
+
+			if ('readingStartDate' in obj && obj.readingStartDate != undefined) {
+				this.readingStartDate = new Date(obj.readingStartDate as string);
+			}
+
+			if ('readingEndDate' in obj && obj.readingEndDate != undefined) {
+				this.readingEndDate = new Date(obj.readingEndDate as string);
+			}
+
+			if ('bookType' in obj && obj.bookType != undefined) {
+				this.bookType = (obj.bookType as string).toString();
+			}
+
+			if ('tags' in obj && obj.tags != undefined) {
+				this.tags = (obj.tags as string[]).map((tag) => tag.toString());
+			}
+
+			if ('rating' in obj && obj.rating != undefined) {
+				this.rating = obj.rating as number;
+			}
+
+			if ('notes' in obj && obj.notes != undefined) {
+				this.notes = (obj.notes as string).toString();
+			}
+
+			if ('libraryId' in obj && obj.libraryId != undefined) {
+				this.libraryId = (obj.libraryId as string).toString();
+			}
+		}
+	}
+
+	toJSON() {
+		/* return {
+			readingStatus: this.readingStatus,
+			bookType: this.bookType,
+			tags: this.tags,
+			rating: this.rating,
+			notes: this.notes,
+			libraryId: this.libraryId
+		}; */
+
+		const result: { [key: string]: unknown } = {};
+
+		for (const key in this) {
+			if (Object.prototype.hasOwnProperty.call(this, key) && this[key] != null) {
+				// Exclude undefined or null
+				result[key] = this[key];
+			}
+		}
+
+		return result;
 	}
 }

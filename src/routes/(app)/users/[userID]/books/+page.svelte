@@ -1,14 +1,10 @@
-<script>
-	import BookFull from '$lib/components/book/BookFull.svelte';
+<script lang="ts">
 	import { Separator } from '$lib/components/ui/separator';
 	import { ScrollArea } from '$lib/components/ui/scroll-area';
-
-	export let data;
-
-	const { user, userBooks } = data;
+	import BookFull from '$lib/components/book/BookFull.svelte';
+	import { userData } from '$lib/state/state.svelte';
 </script>
 
-<!-- User Books -->
 <div class="ml-16 pr-36">
 	<div class="w-full bg-background mb-4">
 		<h1 class="text-3xl font-semibold text-foreground">Books</h1>
@@ -17,14 +13,14 @@
 
 	<ScrollArea>
 		<div class="h-[80vh] w-full flex flex-wrap">
-			{#if userBooks.length > 0}
-				{#each userBooks as book}
-					<div class="flex my-4 ml-1 mr-12">
-						<BookFull {book} />
+			{#if $userData.userBooks.books.length > 0}
+				{#each $userData.userBooks.books as book}
+					<div class="flex my-4 ml-1 mr-14">
+						<BookFull bookId={book.id} />
 					</div>
 				{/each}
 			{:else}
-				<p class="text-center text-lg text-muted-foreground mt-32">No books found</p>
+				<p class="text-center text-lg text-muted-foreground">No books found</p>
 			{/if}
 		</div>
 	</ScrollArea>

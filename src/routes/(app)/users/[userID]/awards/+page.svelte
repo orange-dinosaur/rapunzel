@@ -1,9 +1,6 @@
 <script>
 	import { Separator } from '$lib/components/ui/separator';
-
-	export let data;
-
-	const { user, userBooks } = data;
+	import { userData } from '$lib/state/state.svelte';
 </script>
 
 <div class="ml-16 pr-36">
@@ -16,11 +13,11 @@
 		<ul>
 			<li>
 				<strong>Email:</strong>
-				{user.email}
+				{$userData.user.email}
 			</li>
 			<li>
 				<strong>Name:</strong>
-				{user.name}
+				{$userData.user.name}
 			</li>
 		</ul>
 	</div>

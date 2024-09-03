@@ -33,7 +33,7 @@
 			bookType,
 			tags,
 			rating
-		}).toPlainObject();
+		}).toJSON();
 
 		isLoadingSave = true;
 
@@ -48,7 +48,6 @@
 		});
 
 		if (res.ok) {
-			console.log('RES OK');
 			isLoadingSave = false;
 		}
 	}

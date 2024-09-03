@@ -8,7 +8,7 @@
 </script>
 
 <!-- Book cover -->
-<div class="h-full w-32 w-min-32">
+<div class="h-full w-32 w-min-32 mb-4">
 	<img src={book.cover} alt={book.title} class="h-48 w-32" />
 </div>
 

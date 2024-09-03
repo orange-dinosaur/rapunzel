@@ -1,4 +1,8 @@
-//import { GOOGLE_BOOKS_API_KEY } from '$env/static/private';
+import {
+	PUBLIC_EXTERNAL_BOOKS_API_MAX_RESULTS,
+	PUBLIC_EXTERNAL_BOOKS_API_URL
+} from '$env/static/public';
+import { PRIVATE_EXTERNAL_BOOKS_API_KEY } from '$env/static/private';
 import { BookSearch, UserBooks } from '$lib/types/book/book.js';
 import { redirect } from '@sveltejs/kit';
 
@@ -22,7 +26,9 @@ export async function load({ locals, url }) {
 	const books: BookSearch[] = [];
 	if (searchString != '') {
 		// search the books
-		await fetch(`https://www.googleapis.com/books/v1/volumes?q=${searchString}&maxResults=40`)
+		await fetch(
+			`${PUBLIC_EXTERNAL_BOOKS_API_URL}?q=${searchString}&maxResults=${PUBLIC_EXTERNAL_BOOKS_API_MAX_RESULTS}&key=${PRIVATE_EXTERNAL_BOOKS_API_KEY}`
+		)
 			.then((res) => {
 				return res.json();
 			})
@@ -39,8 +45,7 @@ export async function load({ locals, url }) {
 	}
 
 	// convert the books to plain objects so that they can be sent to the client and serialized
-	const plainObjectBooks = books.map((book) => book.toPlainObject());
-	console.log(plainObjectBooks);
+	const plainObjectBooks = books.map((book) => book.toJSON());
 
 	// check if the user has books
 	let userBooks: UserBooks;
@@ -51,7 +56,7 @@ export async function load({ locals, url }) {
 	}
 
 	// convert the books to plain objects so that they can be sent to the client and serialized
-	const plainObjectUserBooks = userBooks.books.map((book) => book.toPlainObject());
+	const plainObjectUserBooks = userBooks.books.map((book) => book.toJSON());
 
 	return {
 		user: locals.user,

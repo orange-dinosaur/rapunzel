@@ -1,29 +1,33 @@
-<script>
+<script lang="ts">
+	import { BookFull } from '$lib/types/book/book';
 	import BookFullDetails from './BookFullDetails.svelte';
+	import { userData } from '$lib/state/state.svelte';
 
-	export let book;
+	// get the userId and the book from the userState
+	let { bookId }: { bookId: string } = $props();
+	let bookFull = $userData.userBooks.books.find((b) => b.id === bookId) ?? new BookFull();
 </script>
 
-<div class="flex flex-col">
+<div class="flex flex-col max-w-56 w-56">
 	<!-- Book cover -->
-	<div class="h-full">
-		<img src={book.cover} alt={book.title} class="h-56 w-auto" />
+	<div class="mb-4">
+		<img src={bookFull.cover} alt={bookFull.title} class="h-56 w-auto" />
 	</div>
 
 	<div class="flex flex-col justify-start mt-2">
 		<!-- Book -->
 		<div>
-			<h2 class="text-base font-semibold">{book.title}</h2>
-			<p class="text-xs text-muted-foreground mt-1">{book.authors}</p>
+			<h2 class="text-base font-semibold">{bookFull.title}</h2>
+			<p class="text-xs text-muted-foreground mt-1">{bookFull.authors}</p>
 			<div class="flex mt-2">
-				{#if book.publisher}
-					<p class="text-xs text-muted-foreground mr-1">{book.publisher}</p>
+				{#if bookFull.publisher}
+					<p class="text-xs text-muted-foreground mr-1">{bookFull.publisher}</p>
 				{/if}
-				<p class="text-xs text-muted-foreground">({book.publishedDate})</p>
+				<p class="text-xs text-muted-foreground">({bookFull.publishedDate})</p>
 			</div>
 		</div>
 
 		<!-- Book details -->
-		<BookFullDetails {book} />
+		<BookFullDetails bookId={bookFull.id} />
 	</div>
 </div>
