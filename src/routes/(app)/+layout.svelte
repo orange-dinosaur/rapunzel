@@ -170,7 +170,7 @@
 			</div>
 		</div>
 
-		<div class="h-[calc(100%-4rem)] border-r-2 border-primary"></div>
+		<div class="h-[calc(100%-4rem)] border-r-[3px] border-primary"></div>
 	</div>
 
 	<!-- Main content -->
@@ -228,7 +228,7 @@
 							<DropdownMenu.Item>Settings</DropdownMenu.Item>
 						</DropdownMenu.Group>
 						<DropdownMenu.Separator /> -->
-						<DropdownMenu.Item on:click={logout}>Log out</DropdownMenu.Item>
+						<DropdownMenu.Item on:click={logout} class="cursor-pointer">Log out</DropdownMenu.Item>
 					</DropdownMenu.Content>
 				</DropdownMenu.Root>
 			</div>

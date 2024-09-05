@@ -5,8 +5,8 @@
 
 <div class="ml-16 pr-36">
 	<div class="w-full bg-background mb-4">
-		<h1 class="text-3xl font-semibold text-foreground">Bookmark Page - Work in progress</h1>
-		<Separator class="h-1 mt-2 pr-8 bg-foreground" />
+		<h1 class="text-3xl font-semibold text-primary">Bookmark Page - Work in progress</h1>
+		<Separator class="h-[0.18rem] mt-2 pr-8 bg-primary" />
 	</div>
 
 	<div class="h-full w-full">
