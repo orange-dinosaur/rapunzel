@@ -25,23 +25,27 @@ export async function load({ locals, url }) {
 	// search the books
 	const books: BookSearch[] = [];
 	if (searchString != '') {
-		// search the books
-		await fetch(
-			`${PUBLIC_EXTERNAL_BOOKS_API_URL}?q=${searchString}&maxResults=${PUBLIC_EXTERNAL_BOOKS_API_MAX_RESULTS}&key=${PRIVATE_EXTERNAL_BOOKS_API_KEY}`
-		)
-			.then((res) => {
-				return res.json();
-			})
-			.then((data) => {
-				const items = data.items;
+		try {
+			// search the books
+			await fetch(
+				`${PUBLIC_EXTERNAL_BOOKS_API_URL}?q=${searchString}&maxResults=${PUBLIC_EXTERNAL_BOOKS_API_MAX_RESULTS}&key=${PRIVATE_EXTERNAL_BOOKS_API_KEY}`
+			)
+				.then((res) => {
+					return res.json();
+				})
+				.then((data) => {
+					const items = data.items;
 
-				// loop through the items
-				items.forEach((item: object) => {
-					const book = new BookSearch(item);
+					// loop through the items
+					items.forEach((item: object) => {
+						const book = new BookSearch(item);
 
-					books.push(book);
+						books.push(book);
+					});
 				});
-			});
+		} catch (error) {
+			// TODO: handle the error
+		}
 	}
 
 	// convert the books to plain objects so that they can be sent to the client and serialized
