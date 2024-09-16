@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { BookFull } from '$lib/types/book/book';
-	import BookFullDetails from './BookFullDetails.svelte';
+	import BookDetails from './BookDetails.svelte';
 	import { userData } from '$lib/state/state.svelte';
 
 	// get the userId and the book from the userState
@@ -28,6 +28,6 @@
 		</div>
 
 		<!-- Book details -->
-		<BookFullDetails bookId={bookFull.id} />
+		<BookDetails book={bookFull} />
 	</div>
 </div>

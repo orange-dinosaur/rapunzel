@@ -1,14 +1,19 @@
-<script>
+<script lang="ts">
 	import { Button } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';
 	import { LoaderCircle } from 'lucide-svelte';
 	import { applyAction, enhance } from '$app/forms';
 	import BookSearch from '$lib/components/book/BookSearch.svelte';
+	import { BookSearch as BookSearchClass } from '$lib/types/book/book.js';
+	import { userData } from '$lib/state/state.svelte';
 
 	let { data } = $props();
 	let searchStr = $state(data.searchString);
 
 	let isLoading = $state(false);
+
+	// transform searched books to BookSearch
+	let books = data.books.map((book) => BookSearchClass.fromJSON(book));
 </script>
 
 <div class="flex flex-col items-center justify-start pr-8">
@@ -50,13 +55,10 @@
 
 	<span class="h-32"></span>
 
-	{#if data.books.length > 0}
-		{#each data.books as book}
+	{#if books.length > 0}
+		{#each books as book}
 			<div class="w-3/5 py-8 flex">
-				<BookSearch
-					{book}
-					alreadySaved={data.userBooks.some((userBook) => userBook.id === book.id)}
-				/>
+				<BookSearch {book} />
 			</div>
 		{/each}
 	{:else}

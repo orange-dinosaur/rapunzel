@@ -1,10 +1,17 @@
 <script lang="ts">
-	import BookFullDetails from './BookFullDetails.svelte';
-	import BookSearchDetails from './BookSearchDetails.svelte';
+	import { BookFull, type BookSearch } from '$lib/types/book/book';
+	import BookDetails from './BookDetails.svelte';
 	import { BookCheck } from 'lucide-svelte';
+	import { userData } from '$lib/state/state.svelte';
 
-	export let book;
-	export let alreadySaved: boolean;
+	export let book: BookSearch;
+
+	// check if the book is already saved
+	// if it is, get the bookFull from the state
+	// if it is not, create a new BookFull
+	let bookFull = $userData.userBooks.books.some((userBook) => userBook.bookId === book.id)
+		? $userData.userBooks.books.find((b) => b.bookId === book.id) ?? BookFull.fromBookSearch(book)
+		: BookFull.fromBookSearch(book);
 </script>
 
 <!-- Book cover -->
@@ -17,7 +24,7 @@
 	<div>
 		<div class="flex items-center">
 			<h2 class="text-xl font-semibold">{book.title}</h2>
-			{#if alreadySaved}
+			{#if $userData.userBooks.books.some((userBook) => userBook.bookId === book.id)}
 				<BookCheck class="h-5 w-h-5 text-primary ml-2" />
 			{/if}
 		</div>
@@ -31,9 +38,5 @@
 	</div>
 
 	<!-- Book details -->
-	{#if alreadySaved}
-		<BookFullDetails {book} />
-	{:else}
-		<BookSearchDetails {book} />
-	{/if}
+	<BookDetails book={bookFull} />
 </div>

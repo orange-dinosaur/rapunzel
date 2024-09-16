@@ -176,6 +176,25 @@ export class BookFull {
 		}
 	}
 
+	static fromBookSearch(bookSearch: BookSearch) {
+		const bookFUll = new BookFull({
+			bookId: bookSearch.id,
+			title: bookSearch.title,
+			authors: bookSearch.authors,
+			publisher: bookSearch.publisher,
+			publishedDate: bookSearch.publishedDate,
+			description: bookSearch.description,
+			pageCount: bookSearch.pageCount,
+			categories: bookSearch.categories,
+			language: bookSearch.language,
+			cover: bookSearch.cover
+		});
+		bookFUll.isbn10 = bookSearch.isbn10;
+		bookFUll.isbn13 = bookSearch.isbn13;
+
+		return bookFUll;
+	}
+
 	toJSON() {
 		return {
 			id: this.id,
@@ -385,14 +404,50 @@ export class BookSearch {
 			cover: this.cover
 		};
 	}
+
+	static fromJSON(json: BookSearchJSON) {
+		return new BookSearch({
+			id: json.id,
+			volumeInfo: {
+				title: json.title,
+				authors: json.authors,
+				publisher: json.publisher,
+				publishedDate: json.publishedDate,
+				description: json.description,
+				industryIdentifiers: [
+					{ type: 'ISBN_10', identifier: json.isbn10 },
+					{ type: 'ISBN_13', identifier: json.isbn13 }
+				],
+				pageCount: json.pageCount,
+				categories: json.categories,
+				language: json.language,
+				imageLinks: { thumbnail: json.cover }
+			}
+		});
+	}
 }
+
+export type BookSearchJSON = {
+	id: string;
+	title: string;
+	authors: string[];
+	publisher: string;
+	publishedDate: string;
+	description: string;
+	isbn10: string;
+	isbn13: string;
+	pageCount: number;
+	categories: string[];
+	language: string;
+	cover: string;
+};
 
 export class BookToSave {
 	bookId: string;
 	userId: string;
 	readingStatus: string;
-	readingStartDate: Date;
-	readingEndDate: Date;
+	/* readingStartDate: Date;
+	readingEndDate: Date; */
 	bookType: string;
 	tags: string[];
 	rating: number;
@@ -414,8 +469,8 @@ export class BookToSave {
 		this.bookId = '';
 		this.userId = '';
 		this.readingStatus = '';
-		this.readingStartDate = new Date(Date.UTC(0, 0, 0));
-		this.readingEndDate = new Date(Date.UTC(0, 0, 0));
+		/* this.readingStartDate = new Date(Date.UTC(0, 0, 0));
+		this.readingEndDate = new Date(Date.UTC(0, 0, 0)); */
 		this.bookType = '';
 		this.tags = [];
 		this.rating = 0;
@@ -435,13 +490,13 @@ export class BookToSave {
 				this.readingStatus = (obj.readingStatus as string).toString();
 			}
 
-			if ('readingStartDate' in obj) {
+			/* if ('readingStartDate' in obj) {
 				this.readingStartDate = new Date(obj.readingStartDate as string);
 			}
 
 			if ('readingEndDate' in obj) {
 				this.readingEndDate = new Date(obj.readingEndDate as string);
-			}
+			} */
 
 			if ('bookType' in obj) {
 				this.bookType = (obj.bookType as string).toString();
@@ -470,8 +525,8 @@ export class BookToSave {
 			bookId: this.bookId,
 			userId: this.userId,
 			readingStatus: this.readingStatus,
-			readingStartDate: this.readingStartDate,
-			readingEndDate: this.readingEndDate,
+			/* readingStartDate: this.readingStartDate,
+			readingEndDate: this.readingEndDate, */
 			bookType: this.bookType,
 			tags: this.tags,
 			rating: this.rating,
@@ -537,15 +592,6 @@ export class BookToUpdate {
 	}
 
 	toJSON() {
-		/* return {
-			readingStatus: this.readingStatus,
-			bookType: this.bookType,
-			tags: this.tags,
-			rating: this.rating,
-			notes: this.notes,
-			libraryId: this.libraryId
-		}; */
-
 		const result: { [key: string]: unknown } = {};
 
 		for (const key in this) {
