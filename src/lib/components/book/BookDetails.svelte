@@ -247,6 +247,7 @@
 		}
 
 		isSheetOpen = false;
+		isAlreadySaved = false;
 		isLoadingRemove = false;
 	}
 </script>
