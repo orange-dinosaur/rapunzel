@@ -210,6 +210,14 @@
 			});
 
 			toast.success('Book updated successfully');
+
+			// reset the values of the isChanged variables
+			isReadingStatusChanged = false;
+			isReadingStartDateChanged = false;
+			isReadingEndDateChanged = false;
+			isBookTypeChanged = false;
+			isTagsChanged = false;
+			isRatingChanged = false;
 		}
 
 		isLoadingUpdate = false;
