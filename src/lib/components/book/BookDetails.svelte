@@ -12,6 +12,8 @@
 
 	let { book }: { book: BookFull } = $props();
 
+	let tempBookId = $state('');
+
 	// check if the book is already in the user's library
 	let isAlreadySaved = $state($userData.userBooks.books.some((b) => b.bookId === book.bookId));
 
@@ -148,6 +150,9 @@
 			// TODO: find a better way to update the user state
 			$userData.userBooks.books = [...$userData.userBooks.books, SavedBookFull];
 
+			// update the tempBookId so that it can be used to update the book before the user refreshes the page
+			tempBookId = savedBookId.id;
+
 			toast.success('Book saved successfully');
 		}
 
@@ -172,7 +177,9 @@
 
 		isLoadingUpdate = true;
 
-		const res = await fetch(`/api/update-book/${$userData.user.$id}/${book.id}`, {
+		let bookIdToUpdate = book.id === '' ? tempBookId : book.id;
+
+		const res = await fetch(`/api/update-book/${$userData.user.$id}/${bookIdToUpdate}`, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json'
@@ -211,7 +218,9 @@
 	async function removeBookFromLibrary() {
 		isLoadingRemove = true;
 
-		const res = await fetch(`/api/remove-book/${$userData.user.$id}/${book.id}`, {
+		let bookIdToDelete = book.id === '' ? tempBookId : book.id;
+
+		const res = await fetch(`/api/remove-book/${$userData.user.$id}/${bookIdToDelete}`, {
 			method: 'DELETE',
 			headers: {
 				'Content-Type': 'application/json'
