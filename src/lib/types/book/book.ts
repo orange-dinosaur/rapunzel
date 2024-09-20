@@ -126,6 +126,14 @@ export class BookFull {
 				});
 			}
 
+			if ('isbn10' in obj) {
+				this.isbn10 = (obj.isbn10 as string).toString();
+			}
+
+			if ('isbn13' in obj) {
+				this.isbn13 = (obj.isbn13 as string).toString();
+			}
+
 			if ('pageCount' in obj) {
 				this.pageCount = obj.pageCount as number;
 			}
