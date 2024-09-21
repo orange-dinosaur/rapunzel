@@ -186,7 +186,7 @@
 				{#if !$page.url.pathname.startsWith('/search')}
 					<form
 						on:submit={handleSearchSubmit}
-						class="w-[450px] flex border-2 border-primary items-center justify-center rounded-full pl-2 pr-1 mr-24"
+						class="w-[450px] flex border-2 border-primary items-center justify-center rounded-full pl-2 pr-1 mr-16"
 					>
 						<Input
 							id="searchString"
