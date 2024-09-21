@@ -21,7 +21,9 @@
                                 }
                             }}
 >
-	<Select.Trigger class="w-[180px] text-sm">
+	<Select.Trigger
+		class="h-6 w-[180px] text-sm border-0 border-b-[1px] border-b-primary rounded-none m-0 p-0 py-1"
+	>
 		<Select.Value placeholder={selection as string} />
 	</Select.Trigger>
 	<Select.Content>

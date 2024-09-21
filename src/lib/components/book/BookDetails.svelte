@@ -381,7 +381,7 @@
 					</div>
 
 					<!-- Book Type -->
-					<div class="flex items-center mt-1 mb-6">
+					<div class="flex items-center mt-1 mb-4">
 						<p class="text-sm text-muted-foreground font-semibold mr-2">Book type:</p>
 						<SingleSelection
 							possibleSelections={bookTypeSelection}
@@ -394,7 +394,7 @@
 					<Tags {tags} onTagsChange={handleTagsChange} />
 
 					<!-- Rating -->
-					<div class="flex mt-8">
+					<div class="flex mt-6">
 						<!-- <StarRating /> -->
 						<StarRating {rating} onRatingChange={handleRatingChange} stars="5" />
 					</div>
