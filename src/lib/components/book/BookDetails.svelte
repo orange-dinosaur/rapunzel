@@ -10,7 +10,7 @@
 	import { toast } from 'svelte-sonner';
 	import { userData } from '$lib/state/state.svelte';
 
-	let { book }: { book: BookFull } = $props();
+	let { book, displayMode }: { book: BookFull; displayMode: 'search' | 'home' } = $props();
 
 	let tempBookId = $state('');
 
@@ -154,6 +154,14 @@
 			tempBookId = savedBookId.id;
 
 			toast.success('Book saved successfully');
+
+			// reset the values of the isChanged variables
+			isReadingStatusChanged = false;
+			isReadingStartDateChanged = false;
+			isReadingEndDateChanged = false;
+			isBookTypeChanged = false;
+			isTagsChanged = false;
+			isRatingChanged = false;
 		}
 
 		isAlreadySaved = true;
@@ -262,7 +270,65 @@
 
 <div class="flex justify-start mt-4">
 	<Sheet.Root open={isSheetOpen}>
-		<Sheet.Trigger class="text-primary text-sm font-semibold">+ Details</Sheet.Trigger>
+		{#if displayMode === 'home'}
+			<Sheet.Trigger class="text-primary text-sm font-semibold cursor-pointer"
+				><div class="flex flex-col max-w-56 w-56">
+					<!-- Book cover -->
+					<div class="mb-4">
+						<img src={book.cover} alt={book.title} class="h-56 w-auto" />
+					</div>
+
+					<div class="flex flex-col justify-start mt-2">
+						<!-- Book -->
+						<div class="text-left">
+							<h2 class="text-base font-semibold">{book.title}</h2>
+							<p class="text-xs text-muted-foreground mt-1">{book.authors}</p>
+							<div class="flex mt-2">
+								{#if book.publisher}
+									<p class="text-xs text-muted-foreground mr-1">{book.publisher}</p>
+								{/if}
+								<p class="text-xs text-muted-foreground">({book.publishedDate})</p>
+							</div>
+						</div>
+
+						<!-- Book details -->
+						<p class="pt-4 text-left">+ Details</p>
+					</div>
+				</div></Sheet.Trigger
+			>
+		{:else if displayMode === 'search'}
+			<Sheet.Trigger class="text-primary text-sm font-semibold cursor-pointer">
+				<div class="flex justify-start">
+					<!-- Book cover -->
+					<div class="h-full w-auto mb-4">
+						<img src={book.cover} alt={book.title} class="h-56 w-auto" />
+					</div>
+
+					<div class="w-4/5 flex flex-col justify-start ml-8">
+						<!-- Book -->
+						<div class="text-left">
+							<div class="flex items-center">
+								<h2 class="text-xl font-semibold">{book.title}</h2>
+								{#if $userData.userBooks.books.some((userBook) => userBook.bookId === book.id)}
+									<BookCheck class="h-5 w-h-5 text-primary ml-2" />
+								{/if}
+							</div>
+							<p class="text-base text-muted-foreground mt-1">{book.authors}</p>
+							<div class="flex mt-2">
+								{#if book.publisher}
+									<p class="text-sm text-muted-foreground mr-2">{book.publisher}</p>
+								{/if}
+								<p class="text-sm text-muted-foreground">({book.publishedDate})</p>
+							</div>
+						</div>
+
+						<!-- Book details -->
+						<p class="pt-4 text-left">+ Details</p>
+					</div>
+				</div>
+			</Sheet.Trigger>
+		{/if}
+
 		<Sheet.Content class="min-w-[800px] p-16">
 			<ScrollArea class="h-[105%] w-full">
 				<div class="flex w-full items-start justify-start">

@@ -57,7 +57,7 @@
 
 	{#if books.length > 0}
 		{#each books as book}
-			<div class="w-3/5 py-8 flex">
+			<div class="w-3/5 py-4 flex">
 				<BookSearch {book} />
 			</div>
 		{/each}

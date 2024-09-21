@@ -9,25 +9,9 @@
 </script>
 
 <div class="flex flex-col max-w-56 w-56">
-	<!-- Book cover -->
-	<div class="mb-4">
-		<img src={bookFull.cover} alt={bookFull.title} class="h-56 w-auto" />
-	</div>
-
-	<div class="flex flex-col justify-start mt-2">
-		<!-- Book -->
-		<div>
-			<h2 class="text-base font-semibold">{bookFull.title}</h2>
-			<p class="text-xs text-muted-foreground mt-1">{bookFull.authors}</p>
-			<div class="flex mt-2">
-				{#if bookFull.publisher}
-					<p class="text-xs text-muted-foreground mr-1">{bookFull.publisher}</p>
-				{/if}
-				<p class="text-xs text-muted-foreground">({bookFull.publishedDate})</p>
-			</div>
-		</div>
-
-		<!-- Book details -->
+	<!-- <div class="flex flex-col justify-start mt-2">
 		<BookDetails book={bookFull} />
-	</div>
+	</div> -->
+
+	<BookDetails book={bookFull} displayMode="home" />
 </div>
