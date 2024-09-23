@@ -272,22 +272,22 @@
 	<Sheet.Root open={isSheetOpen}>
 		{#if displayMode === 'home'}
 			<Sheet.Trigger class="text-primary text-sm font-semibold cursor-pointer"
-				><div class="flex flex-col max-w-56 w-56">
+				><div class="flex flex-col max-w-72 w-72 mr-6">
 					<!-- Book cover -->
 					<div class="mb-4">
 						<img src={book.cover} alt={book.title} class="h-56 w-auto" />
 					</div>
 
-					<div class="flex flex-col justify-start mt-2">
+					<div class="flex flex-col justify-start mt-2 mr-10">
 						<!-- Book -->
 						<div class="text-left">
-							<h2 class="text-base font-semibold">{book.title}</h2>
-							<p class="text-xs text-muted-foreground mt-1">{book.authors}</p>
-							<div class="flex mt-2">
+							<h2 class="min-h-12 text-base font-semibold mb-2">{book.title}</h2>
+							<p class="text-sm text-muted-foreground mt-1 mb-2">{book.authors}</p>
+							<div class="mt-1">
 								{#if book.publisher}
-									<p class="text-xs text-muted-foreground mr-1">{book.publisher}</p>
+									<p class="text-sm text-muted-foreground mr-1">{book.publisher}</p>
 								{/if}
-								<p class="text-xs text-muted-foreground">({book.publishedDate})</p>
+								<p class="text-sm text-muted-foreground">({book.publishedDate})</p>
 							</div>
 						</div>
 
@@ -314,7 +314,7 @@
 								{/if}
 							</div>
 							<p class="text-base text-muted-foreground mt-1">{book.authors}</p>
-							<div class="flex mt-2">
+							<div class="mt-2">
 								{#if book.publisher}
 									<p class="text-sm text-muted-foreground mr-2">{book.publisher}</p>
 								{/if}
