@@ -309,7 +309,7 @@
 						<div class="text-left">
 							<div class="flex items-center">
 								<h2 class="text-xl font-semibold">{book.title}</h2>
-								{#if $userData.userBooks.books.some((userBook) => userBook.bookId === book.id)}
+								{#if isAlreadySaved}
 									<BookCheck class="h-5 w-h-5 text-primary ml-2" />
 								{/if}
 							</div>
@@ -391,7 +391,7 @@
 					<!-- Book Title -->
 					<div class="flex items-center">
 						<Sheet.Title>{book.title}</Sheet.Title>
-						{#if isAlreadySaved}
+						{#if isAlreadySaved && displayMode === 'search'}
 							<BookCheck class="h-5 w-h-5 text-primary ml-2" />
 						{/if}
 					</div>
