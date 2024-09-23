@@ -3,8 +3,8 @@
 	import { Input } from '$lib/components/ui/input';
 	import { LoaderCircle } from 'lucide-svelte';
 	import { applyAction, enhance } from '$app/forms';
-	import BookSearch from '$lib/components/book/BookSearch.svelte';
-	import { BookSearch as BookSearchClass } from '$lib/types/book/book.js';
+	import { BookFull, BookSearch as BookSearchClass } from '$lib/types/book/book.js';
+	import BookDetails from '$lib/components/book/BookDetails.svelte';
 	import { userData } from '$lib/state/state.svelte';
 
 	let { data } = $props();
@@ -58,7 +58,13 @@
 	{#if books.length > 0}
 		{#each books as book}
 			<div class="w-3/5 py-4 flex">
-				<BookSearch {book} />
+				<BookDetails
+					book={$userData.userBooks.books.some((userBook) => userBook.bookId === book.id)
+						? $userData.userBooks.books.find((b) => b.bookId === book.id) ??
+							BookFull.fromBookSearch(book)
+						: BookFull.fromBookSearch(book)}
+					displayMode="search"
+				/>
 			</div>
 		{/each}
 	{:else}

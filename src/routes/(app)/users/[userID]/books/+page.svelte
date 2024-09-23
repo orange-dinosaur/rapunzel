@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Separator } from '$lib/components/ui/separator';
 	import { ScrollArea } from '$lib/components/ui/scroll-area';
-	import BookFull from '$lib/components/book/BookFull.svelte';
+	import BookDetails from '$lib/components/book/BookDetails.svelte';
 	import { userData } from '$lib/state/state.svelte';
 </script>
 
@@ -16,7 +16,9 @@
 			{#if $userData.userBooks.books.length > 0}
 				{#each $userData.userBooks.books as book}
 					<div class="flex my-4 ml-1 mr-14">
-						<BookFull bookId={book.id} />
+						<div class="flex flex-col max-w-56 w-56">
+							<BookDetails {book} displayMode="home" />
+						</div>
 					</div>
 				{/each}
 			{:else}
