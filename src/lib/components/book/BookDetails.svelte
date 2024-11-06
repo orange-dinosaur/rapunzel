@@ -14,9 +14,6 @@
 
 	let tempBookId = $state('');
 
-	// check if the book is already in the user's library
-	let isAlreadySaved = $state($userData.userBooks.books.some((b) => b.bookId === book.bookId));
-
 	// boolean variables that define if there is an action ongoing
 	let isLoadingSave = $state(false);
 	let isLoadingWishlist = $state(false);
@@ -47,15 +44,20 @@
 	const readingStatusSelection = ['to-read', 'reading', 'completed', 'dnf'];
 	const bookTypeSelection = ['book', 'e-book', 'audiobook'];
 
+	// check if the book is already in the user's library
+	function checkIfBookIsAlreadySaved() {
+		return $userData.userBooks.books.some((b) => b.bookId === book.bookId);
+	}
+
 	// if the book is already in the user's library,
 	// set the book properties with the user's book properties
 	// otherwise, set the book properties with the default values
 	function defineInitialValues() {
 		return {
-			readingStatus: isAlreadySaved ? book.readingStatus : '',
-			bookType: isAlreadySaved ? book.bookType : '',
-			tags: isAlreadySaved ? book.tags : [],
-			rating: isAlreadySaved ? book.rating : 0,
+			readingStatus: checkIfBookIsAlreadySaved() ? book.readingStatus : '',
+			bookType: checkIfBookIsAlreadySaved() ? book.bookType : '',
+			tags: checkIfBookIsAlreadySaved() ? book.tags : [],
+			rating: checkIfBookIsAlreadySaved() ? book.rating : 0,
 			readingStartDate: new Date(),
 			readingEndDate: new Date()
 		};
@@ -164,7 +166,7 @@
 			isRatingChanged = false;
 		}
 
-		isAlreadySaved = true;
+		/* isAlreadySaved = true; */
 		isLoadingSave = false;
 	}
 
@@ -201,7 +203,7 @@
 			// update user state
 			// TODO: find a better way to update the user state
 			const updatedBooksJSON = $userData.userBooks.books.map((b) => {
-				if (b.id === book.id) {
+				if (b.id === bookIdToUpdate) {
 					return {
 						...b,
 						...bookToUpdateJSON
@@ -249,7 +251,7 @@
 		} else {
 			// update user state
 			// TODO: find a better way to update the user state
-			const updatedBooks = $userData.userBooks.books.filter((b) => b.id !== book.id);
+			const updatedBooks = $userData.userBooks.books.filter((b) => b.id !== bookIdToDelete);
 			$userData.userBooks.books = updatedBooks;
 
 			userData.set({
@@ -263,7 +265,7 @@
 		}
 
 		isSheetOpen = false;
-		isAlreadySaved = false;
+		/* isAlreadySaved = false; */
 		isLoadingRemove = false;
 	}
 </script>
@@ -271,7 +273,11 @@
 <div class="flex justify-start mt-4">
 	<Sheet.Root open={isSheetOpen}>
 		{#if displayMode === 'home'}
-			<Sheet.Trigger class="text-primary text-sm font-semibold cursor-pointer"
+			<Sheet.Trigger
+				on:click={() => {
+					isSheetOpen = true;
+				}}
+				class="text-primary text-sm font-semibold cursor-pointer"
 				><div class="flex flex-col max-w-72 w-72 mr-6">
 					<!-- Book cover -->
 					<div class="mb-4">
@@ -282,6 +288,7 @@
 						<!-- Book -->
 						<div class="text-left">
 							<h2 class="min-h-12 text-base font-semibold mb-2">{book.title}</h2>
+
 							<p class="text-sm text-muted-foreground mt-1 mb-2">{book.authors}</p>
 							<div class="mt-1">
 								{#if book.publisher}
@@ -297,10 +304,15 @@
 				</div></Sheet.Trigger
 			>
 		{:else if displayMode === 'search'}
-			<Sheet.Trigger class="text-primary text-sm font-semibold cursor-pointer">
+			<Sheet.Trigger
+				on:click={() => {
+					isSheetOpen = true;
+				}}
+				class="text-primary text-sm font-semibold cursor-pointer"
+			>
 				<div class="flex justify-start">
 					<!-- Book cover -->
-					<div class="h-full w-auto mb-4">
+					<div class="h-full min-w-44 mb-4">
 						<img src={book.cover} alt={book.title} class="h-56 w-auto" />
 					</div>
 
@@ -309,7 +321,7 @@
 						<div class="text-left">
 							<div class="flex items-center">
 								<h2 class="text-xl font-semibold">{book.title}</h2>
-								{#if isAlreadySaved}
+								{#if checkIfBookIsAlreadySaved()}
 									<BookCheck class="h-5 w-h-5 text-primary ml-2" />
 								{/if}
 							</div>
@@ -336,8 +348,8 @@
 					<img src={book.cover} alt={book.title} class="h-60 w-auto mb-8" />
 
 					<!-- Actions -->
-					<div class="h-60 flex flex-col justify-end ml-4">
-						{#if isAlreadySaved}
+					<div class="h-60 flex flex-col justify-end ml-8">
+						{#if checkIfBookIsAlreadySaved()}
 							<!-- Update book -->
 							<Button
 								class="mb-2"
@@ -391,7 +403,7 @@
 					<!-- Book Title -->
 					<div class="flex items-center">
 						<Sheet.Title>{book.title}</Sheet.Title>
-						{#if isAlreadySaved && displayMode === 'search'}
+						{#if checkIfBookIsAlreadySaved() && displayMode === 'search'}
 							<BookCheck class="h-5 w-h-5 text-primary ml-2" />
 						{/if}
 					</div>
