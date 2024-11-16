@@ -55,7 +55,7 @@
 	async function handleSearchSubmit(event: { preventDefault: () => void }) {
 		event.preventDefault(); // Prevent default form submission
 		isLoading = true; // Show loading spinner
-		await goto('/search?searchString=' + searchString); // Navigate to the target page
+		await goto('/search?q=' + searchString); // Navigate to the target page
 		isLoading = false; // Hide loading spinner
 	}
 </script>

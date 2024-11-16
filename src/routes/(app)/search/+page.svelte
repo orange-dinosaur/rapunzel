@@ -2,19 +2,42 @@
 	import { Button } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';
 	import { LoaderCircle } from 'lucide-svelte';
-	import { applyAction, enhance } from '$app/forms';
 	import BookSearch from '$lib/components/book/BookSearch.svelte';
-	import { BookFull, BookSearch as BookSearchClass } from '$lib/types/book/book.js';
-	import BookDetails from '$lib/components/book/BookDetails.svelte';
-	import { userData } from '$lib/state/state.svelte';
+	import { BookSearch as BookSearchClass } from '$lib/types/book/book.js';
 
 	let { data } = $props();
-	let searchStr = $state(data.searchString);
+	let searchStr = $state(data.searchStr);
 
 	let isLoading = $state(false);
 
 	// transform searched books to BookSearch
-	let books = data.books.map((book) => BookSearchClass.fromJSON(book));
+	let books = $state(data.books.map((book) => BookSearchClass.fromJSON(book)));
+
+	async function handleSubmition(event: Event) {
+		event.preventDefault();
+		console.log('SUBMIT');
+
+		isLoading = true;
+
+		data.searchStr = searchStr;
+
+		// Update the URL of the page
+		const url = new URL(window.location.href);
+		url.searchParams.set('q', searchStr);
+		history.pushState({}, '', url); // Push the new URL without reloading the page
+
+		const res = await fetch(`/api/search/books/${searchStr}`, {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json'
+			}
+		});
+		const searchResult = await res.json();
+		books.splice(0, books.length);
+		books = searchResult.map((book: any) => BookSearchClass.fromJSON(book));
+
+		isLoading = false;
+	}
 </script>
 
 <div class="flex flex-col items-center justify-start pr-8">
@@ -22,20 +45,7 @@
 	<div class="bg-background fixed z-20">
 		<form
 			method="post"
-			use:enhance={() => {
-				isLoading = true;
-				return async ({ result, update }) => {
-					isLoading = false;
-
-					if (result.status === 200) {
-						update();
-					} else {
-						await applyAction(result);
-					}
-
-					update();
-				};
-			}}
+			onsubmit={handleSubmition}
 			class="w-[550px] flex border-2 border-primary items-center justify-center rounded-lg p-1"
 		>
 			<Input
@@ -57,7 +67,7 @@
 	<span class="h-32"></span>
 
 	{#if books.length > 0}
-		{#each books as book}
+		{#each books as book (book.id)}
 			<div class="w-3/5 py-4 flex">
 				<BookSearch {book} />
 			</div>
