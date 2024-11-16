@@ -15,7 +15,6 @@
 
 	async function handleSubmition(event: Event) {
 		event.preventDefault();
-		console.log('SUBMIT');
 
 		isLoading = true;
 
@@ -26,6 +25,7 @@
 		url.searchParams.set('q', searchStr);
 		history.pushState({}, '', url); // Push the new URL without reloading the page
 
+		// TODO: Add error handling
 		const res = await fetch(`/api/search/books/${searchStr}`, {
 			method: 'GET',
 			headers: {
