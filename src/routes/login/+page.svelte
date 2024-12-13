@@ -5,12 +5,14 @@
 	import { Label } from '$lib/components/ui/label';
 	import { applyAction, enhance } from '$app/forms';
 	import * as Alert from '$lib/components/ui/alert/index.js';
+	import * as Dialog from '$lib/components/ui/dialog/index.js';
 	import { PUBLIC_LOGIN_IMAGE } from '$env/static/public';
 	import logo from '$lib/assets/logo.png';
 
 	export let form;
 
 	let isLoading = false;
+	let recoveryAlreadySent = false;
 </script>
 
 <div class="h-dvh w-dvw px-36 py-12">
@@ -32,6 +34,7 @@
 				<div class="w-full flex flex-col items-center justify-start">
 					<form
 						method="post"
+						action="?/login"
 						use:enhance={() => {
 							isLoading = true;
 							return async ({ result, update }) => {
@@ -87,6 +90,66 @@
 							</Button>
 						</div>
 					</form>
+
+					<Dialog.Root>
+						<Dialog.Trigger on:click={() => (recoveryAlreadySent = false)} class="cursor-pointer"
+							><p class="text-center text-sm text-blue-900 mt-6 w-full">
+								Forget your password?
+							</p></Dialog.Trigger
+						>
+						<Dialog.Content class="h-64">
+							<form
+								method="post"
+								action="?/recover_password"
+								use:enhance={() => {
+									isLoading = true;
+									return async ({ result, update }) => {
+										if (result.status === 200) {
+											update();
+										} else {
+											await applyAction(result);
+										}
+
+										update();
+										isLoading = false;
+										recoveryAlreadySent = true;
+									};
+								}}
+							>
+								{#if recoveryAlreadySent}
+									<p class="text-base pt-12">An email have been sent to recover your password</p>
+								{:else}
+									<Dialog.Header class="py-6">
+										<p class="text-base">Insert your email to receive a recovery link</p>
+									</Dialog.Header>
+									<div class="grid gap-4 py-4">
+										<div class="grid grid-cols-4 items-center gap-4">
+											<Label for="email" class="text-right">Email</Label>
+											<Input
+												id="email"
+												name="email"
+												type="email"
+												value={form?.fields.email ?? ''}
+												placeholder="name@example.com"
+												autocapitalize="none"
+												autocomplete="email"
+												autocorrect="off"
+												class="col-span-3"
+											/>
+										</div>
+									</div>
+									<Dialog.Footer class="pt-4">
+										<Button type="submit" disabled={isLoading} class="font-semibold">
+											{#if isLoading}
+												<LoaderCircle class="mr-2 h-4 w-4 animate-spin" />
+											{/if}
+											Recover password
+										</Button>
+									</Dialog.Footer>
+								{/if}
+							</form>
+						</Dialog.Content>
+					</Dialog.Root>
 
 					<p class="px-8 text-center text-sm text-muted-foreground mt-6 w-3/5">
 						By clicking continue, you agree to our

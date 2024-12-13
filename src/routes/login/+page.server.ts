@@ -1,3 +1,4 @@
+import { PUBLIC_PASSWORD_RECOVERY_PATH } from '$env/static/public';
 import {
 	SESSION_COOKIE,
 	createAdminClient,
@@ -18,7 +19,7 @@ export const actions = {
 	// A user can successully login only if the email is verified
 	// Even if the email is not verified the session is still created,
 	// so that after the user verifies the email, they can be redirected to their account page
-	default: async ({ request, cookies }) => {
+	login: async ({ request, cookies }) => {
 		// Extract the form data.
 		const formData = await request.formData();
 		const email = formData.get('email')?.toString() ?? '';
@@ -67,6 +68,31 @@ export const actions = {
 
 		// Redirect to the account page.
 		redirect(301, `/users/${session.userId}`);
+	},
+
+	recover_password: async ({ request }) => {
+		// Extract the form data.
+		const formData = await request.formData();
+		const email = formData.get('email')?.toString() ?? '';
+
+		console.log('EMAIL: ', email);
+
+		// Create the Appwrite client.
+		const { account } = createAdminClient();
+		try {
+			await account.createRecovery(email, PUBLIC_PASSWORD_RECOVERY_PATH);
+		} catch (error) {
+			// TODO: Handle error
+		}
+
+		return {
+			status: 200,
+			message: 'Password recovery email sent',
+			fields: {
+				email,
+				password: ''
+			}
+		};
 	}
 };
 
